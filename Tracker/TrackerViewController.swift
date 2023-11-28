@@ -16,11 +16,8 @@ class TrackerViewController: UIViewController {
 //        searchBar.delegate = self
         addSubviews()
         setupContraints()
-//        customView.frame = CGRect(origin: CGPoint(x: 10, y: 20), size: CGSize(width: 50, height: 25))
         setupNavBar()
     }
-    
-    
     
     private let addTask: UIBarButtonItem = {
         let button = UIBarButtonItem(
