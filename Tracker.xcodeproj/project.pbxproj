@@ -15,6 +15,9 @@
 		84B7BF732B16212C0085E8EF /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7BF722B16212C0085E8EF /* TrackerViewController.swift */; };
 		84B7BF752B1621630085E8EF /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7BF742B1621630085E8EF /* TabBarController.swift */; };
 		84B7BF772B16219A0085E8EF /* UicolorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7BF762B16219A0085E8EF /* UicolorExtension.swift */; };
+		84B7C0032B18B0920085E8EF /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7C0022B18B0920085E8EF /* Tracker.swift */; };
+		84B7C0052B18B0C50085E8EF /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7C0042B18B0C50085E8EF /* TrackerCategory.swift */; };
+		84B7C0072B18B0CF0085E8EF /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7C0062B18B0CF0085E8EF /* TrackerRecord.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		84B7BF722B16212C0085E8EF /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		84B7BF742B1621630085E8EF /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		84B7BF762B16219A0085E8EF /* UicolorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UicolorExtension.swift; sourceTree = "<group>"; };
+		84B7C0022B18B0920085E8EF /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
+		84B7C0042B18B0C50085E8EF /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
+		84B7C0062B18B0CF0085E8EF /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,17 +66,52 @@
 		84B7BF5D2B1620F80085E8EF /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				84B7C0012B18B0790085E8EF /* Model */,
 				84B7BF5E2B1620F80085E8EF /* AppDelegate.swift */,
 				84B7BF602B1620F80085E8EF /* SceneDelegate.swift */,
-				84B7BF722B16212C0085E8EF /* TrackerViewController.swift */,
-				84B7BF622B1620F80085E8EF /* StatisticViewController.swift */,
-				84B7BF742B1621630085E8EF /* TabBarController.swift */,
-				84B7BF762B16219A0085E8EF /* UicolorExtension.swift */,
+				84B7BFFE2B18B0430085E8EF /* View Controllers */,
+				84B7C0002B18B0660085E8EF /* Tab Bar */,
+				84B7BFFF2B18B05C0085E8EF /* Helpers */,
 				84B7BF672B1620FA0085E8EF /* Assets.xcassets */,
 				84B7BF692B1620FA0085E8EF /* LaunchScreen.storyboard */,
 				84B7BF6C2B1620FA0085E8EF /* Info.plist */,
 			);
 			path = Tracker;
+			sourceTree = "<group>";
+		};
+		84B7BFFE2B18B0430085E8EF /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				84B7BF622B1620F80085E8EF /* StatisticViewController.swift */,
+				84B7BF722B16212C0085E8EF /* TrackerViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		84B7BFFF2B18B05C0085E8EF /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				84B7BF762B16219A0085E8EF /* UicolorExtension.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		84B7C0002B18B0660085E8EF /* Tab Bar */ = {
+			isa = PBXGroup;
+			children = (
+				84B7BF742B1621630085E8EF /* TabBarController.swift */,
+			);
+			path = "Tab Bar";
+			sourceTree = "<group>";
+		};
+		84B7C0012B18B0790085E8EF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				84B7C0022B18B0920085E8EF /* Tracker.swift */,
+				84B7C0042B18B0C50085E8EF /* TrackerCategory.swift */,
+				84B7C0062B18B0CF0085E8EF /* TrackerRecord.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,10 +186,13 @@
 			files = (
 				84B7BF632B1620F80085E8EF /* StatisticViewController.swift in Sources */,
 				84B7BF732B16212C0085E8EF /* TrackerViewController.swift in Sources */,
+				84B7C0052B18B0C50085E8EF /* TrackerCategory.swift in Sources */,
 				84B7BF5F2B1620F80085E8EF /* AppDelegate.swift in Sources */,
 				84B7BF772B16219A0085E8EF /* UicolorExtension.swift in Sources */,
+				84B7C0072B18B0CF0085E8EF /* TrackerRecord.swift in Sources */,
 				84B7BF752B1621630085E8EF /* TabBarController.swift in Sources */,
 				84B7BF612B1620F80085E8EF /* SceneDelegate.swift in Sources */,
+				84B7C0032B18B0920085E8EF /* Tracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
