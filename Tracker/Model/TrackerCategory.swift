@@ -5,7 +5,7 @@
 //  Created by Сергей on 30.11.2023.
 //
 
-import UIKit
+import Foundation
 
 struct TrackerCategory {
     let title: String
