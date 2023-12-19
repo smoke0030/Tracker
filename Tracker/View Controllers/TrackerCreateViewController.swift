@@ -11,11 +11,10 @@ import UIKit
 
 class TrackerCreateViewController: UIViewController {
     
-   
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
         setupViews()
         
     }
@@ -51,6 +50,7 @@ class TrackerCreateViewController: UIViewController {
     
     @objc func habitButoonTapped() {
         print("Habit")
+        present(HabitCreateViewController(), animated: true)
     }
     
     @objc func irregularEventButtonTapped() {
