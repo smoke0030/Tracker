@@ -17,7 +17,7 @@ class HabitCell: UITableViewCell {
     }()
     
     lazy var titleLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
         return label
@@ -29,7 +29,6 @@ class HabitCell: UITableViewCell {
         contentView.addSubview(detailButton)
         contentView.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
         
-        
         NSLayoutConstraint.activate([
             detailButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             detailButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -37,7 +36,6 @@ class HabitCell: UITableViewCell {
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             contentView.heightAnchor.constraint(equalToConstant: 75)
         ])
-        
     }
     
     required init?(coder: NSCoder) {

@@ -96,6 +96,9 @@ class HabitCreateViewController: UIViewController {
     }
     
     @objc private func doneButtonTapped() {
+        dismiss(animated: true) {
+        }
+        
         print("create")
     }
     
@@ -160,7 +163,7 @@ extension HabitCreateViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             print("category")
         } else {
-            print("Schedule")
+            present(ScheduleViewController(), animated: true)
         }
     }
 }

@@ -7,23 +7,18 @@
 
 import UIKit
 
-
-
-class TrackerCreateViewController: UIViewController {
+class SelectTrackerTypeController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
         setupViews()
-        
     }
-    
     
     private let titleLabel: UILabel = {
         let title = UILabel()
         title.text = "Создание трекера"
-        title.font = .systemFont(ofSize: 16)
+        title.font = .systemFont(ofSize: 16, weight: .medium)
         title.translatesAutoresizingMaskIntoConstraints = false
         return title
     }()
@@ -48,8 +43,17 @@ class TrackerCreateViewController: UIViewController {
         return button
     }()
     
+    private var buttonsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.distribution = .fillEqually
+        stackView.layer.cornerRadius = 16
+        return stackView
+    }()
+    
     @objc func habitButoonTapped() {
-        print("Habit")
         present(HabitCreateViewController(), animated: true)
     }
     
@@ -58,23 +62,20 @@ class TrackerCreateViewController: UIViewController {
     }
     
     func setupViews() {
+        view.backgroundColor = .white
+        view.addSubview(buttonsStackView)
         view.addSubview(titleLabel)
-        view.addSubview(habitButton)
-        view.addSubview(irregularEventButton)
+        buttonsStackView.addArrangedSubview(habitButton)
+        buttonsStackView.addArrangedSubview(irregularEventButton)
         
         NSLayoutConstraint.activate([
-                                     titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                                     titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
-                                     habitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                                     habitButton.topAnchor.constraint(equalTo: view.centerYAnchor),
-                                     habitButton.widthAnchor.constraint(equalToConstant: 300),
-                                     habitButton.heightAnchor.constraint(equalToConstant: 60),
-                                     irregularEventButton.topAnchor.constraint(equalTo: habitButton.bottomAnchor, constant: 16),
-                                     irregularEventButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                                     irregularEventButton.widthAnchor.constraint(equalToConstant: 300),
-                                     irregularEventButton.heightAnchor.constraint(equalToConstant: 60)
-                                     
-                                     
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            buttonsStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            buttonsStackView.heightAnchor.constraint(equalToConstant: 140),
+           
         ])
     }
 }

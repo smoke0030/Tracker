@@ -8,15 +8,19 @@
 import UIKit
 
 class TabBarController: UITabBarController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
-//        setTabBarAppearance()
+        //        setTabBarAppearance()
     }
     
     private func setupTabBar() {
-        let vc = UINavigationController(rootViewController: TrackerViewController())
+        
+        let vc = TrackerViewController.shared.categories.isEmpty ? UINavigationController(rootViewController: EmptyViewController()) : UINavigationController(rootViewController: TrackerViewController())
+        
+//        let vc = UINavigationController(rootViewController: TrackerViewController())
+        
         vc.tabBarItem.title = "Трекеры"
         vc.tabBarItem.image = UIImage(named: "trackerImage")
         
@@ -25,17 +29,17 @@ class TabBarController: UITabBarController {
                                   image: UIImage(named: "statisticImage"))
         viewControllers = [vc, statisticVC]
     }
-     
+    
     private func setupVC(vc: UIViewController, title: String, image: UIImage?) -> UIViewController {
         vc.tabBarItem.title = title
         vc.tabBarItem.image = image
         return vc
     }
     
-//    private func setTabBarAppearance() {
-//        let roundLayer = CAShapeLayer()
-//
-//    }
+    //    private func setTabBarAppearance() {
+    //        let roundLayer = CAShapeLayer()
+    //
+    //    }
 }
 
 
