@@ -15,8 +15,6 @@ class ScheduleViewController: UIViewController {
     
     weak var delegate: ScheduleViewControllerDelegate?
     
-    var switchStates: [Bool: String] =  [:]
-    
     private let weekDays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
     private var selectedDays: [String] = []
     
@@ -100,7 +98,6 @@ extension ScheduleViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as! ScheduleCell
         let switchView = UISwitch()
         cell.cellDaysLabel.text = weekDays[indexPath.row]
-        
         cell.setSwitch(for: switchView, at: indexPath)
         cell.delegate = self
         cell.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
@@ -130,7 +127,6 @@ extension ScheduleViewController: ScheduleCellDelegate {
     func switchChanged(forDay day: String, selected: Bool) {
         if selected {
             selectedDays.append(day)
-            //            switchStates.
         } else {
             selectedDays.removeAll(where: {$0 == day})
         }

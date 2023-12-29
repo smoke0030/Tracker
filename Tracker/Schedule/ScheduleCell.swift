@@ -42,9 +42,8 @@ class ScheduleCell: UITableViewCell {
     }
     
     func setSwitch(for switchView: UISwitch, at indexPath: IndexPath) {
-        //        let switchView = UISwitch()
-        //        switchView.isOn = selectedDays.contains(days[indexPath.row])
         switchView.setOn(false, animated: true)
+        switchView.onTintColor = .blue
         switchView.tag = indexPath.row
         switchView.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
         self.accessoryView = switchView
@@ -54,5 +53,6 @@ class ScheduleCell: UITableViewCell {
         let indexPath = IndexPath(row: sender.tag, section: 0)
         let day = days[indexPath.row]
         delegate?.switchChanged(forDay: day, selected: sender.isOn)
+        
     }
 }
