@@ -13,7 +13,6 @@
 		846812452B31A18E00E52E53 /* HabitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812442B31A18E00E52E53 /* HabitCell.swift */; };
 		846812482B32DCB600E52E53 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812472B32DCB600E52E53 /* ScheduleViewController.swift */; };
 		8468124A2B32DE5900E52E53 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812492B32DE5900E52E53 /* ScheduleCell.swift */; };
-		8468124C2B33083700E52E53 /* EmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8468124B2B33083700E52E53 /* EmptyViewController.swift */; };
 		8468127F2B3EAE0400E52E53 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8468127E2B3EAE0300E52E53 /* CategoryViewController.swift */; };
 		846812812B3EAE2300E52E53 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812802B3EAE2300E52E53 /* CategoryCell.swift */; };
 		84B7BF5F2B1620F80085E8EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B7BF5E2B1620F80085E8EF /* AppDelegate.swift */; };
@@ -37,7 +36,6 @@
 		846812442B31A18E00E52E53 /* HabitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCell.swift; sourceTree = "<group>"; };
 		846812472B32DCB600E52E53 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		846812492B32DE5900E52E53 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
-		8468124B2B33083700E52E53 /* EmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 		8468127E2B3EAE0300E52E53 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		846812802B3EAE2300E52E53 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		84B7BF5B2B1620F80085E8EF /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -153,7 +151,6 @@
 				84B7BF722B16212C0085E8EF /* TrackerViewController.swift */,
 				846812362B2B224C00E52E53 /* TrackerCell.swift */,
 				846812392B2CD59400E52E53 /* TrackerHeaderCell.swift */,
-				8468124B2B33083700E52E53 /* EmptyViewController.swift */,
 			);
 			path = Trackers;
 			sourceTree = "<group>";
@@ -265,7 +262,6 @@
 				846812372B2B224C00E52E53 /* TrackerCell.swift in Sources */,
 				84B7C0072B18B0CF0085E8EF /* TrackerRecord.swift in Sources */,
 				84B7BF752B1621630085E8EF /* TabBarController.swift in Sources */,
-				8468124C2B33083700E52E53 /* EmptyViewController.swift in Sources */,
 				8468124A2B32DE5900E52E53 /* ScheduleCell.swift in Sources */,
 				84BF06A82B278DAE00C235CD /* SelectTrackerTypeController.swift in Sources */,
 				84B7BF612B1620F80085E8EF /* SceneDelegate.swift in Sources */,
