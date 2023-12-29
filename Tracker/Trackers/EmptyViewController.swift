@@ -56,8 +56,10 @@ class EmptyViewController: UIViewController {
     }
     
     @objc func addButtonTapped() {
-        let vc = SelectTrackerTypeController()
-        self.present(vc, animated: true)
+        let selectTrackerTypeController = SelectTrackerTypeController()
+        let trackerVC = TrackerViewController()
+        selectTrackerTypeController.delegate = trackerVC
+        self.present(selectTrackerTypeController, animated: true)
         
     }
     

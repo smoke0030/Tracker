@@ -7,9 +7,18 @@
 
 import UIKit
 
+protocol ScheduleViewControllerDelegate: AnyObject {
+    func didSelectScheduleDays(_ days: [String])
+}
+
 class ScheduleViewController: UIViewController {
     
-    private let weekDays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье",]
+    weak var delegate: ScheduleViewControllerDelegate?
+    
+    var switchStates: [Bool: String] =  [:]
+    
+    private let weekDays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+    private var selectedDays: [String] = []
     
     private lazy var scheduleTitle: UILabel = {
         let label = UILabel()
@@ -39,7 +48,7 @@ class ScheduleViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Готово", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(doneButtonTapped(_ :)), for: .touchUpInside)
         button.backgroundColor = .black
         button.layer.cornerRadius = 16
         return button
@@ -51,7 +60,6 @@ class ScheduleViewController: UIViewController {
         setupViews()
         setupConstraints()
     }
-    
     
     private func setupViews() {
         view.backgroundColor = .white
@@ -76,13 +84,11 @@ class ScheduleViewController: UIViewController {
         ])
     }
     
-    @objc func doneButtonTapped() {
-        dismiss(animated: true) {
-            print("dismiss")
-        }
+    @objc func doneButtonTapped(_ sender: UIAction) {
+        print("Selected days", selectedDays)
+        delegate?.didSelectScheduleDays(selectedDays)
+        dismiss(animated: true)
     }
-    
-    
 }
 
 extension ScheduleViewController: UITableViewDataSource {
@@ -92,9 +98,11 @@ extension ScheduleViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as! ScheduleCell
-    
-        cell.cellLabel.text = weekDays[indexPath.row]
-        cell.setSwitch(at: indexPath)
+        let switchView = UISwitch()
+        cell.cellDaysLabel.text = weekDays[indexPath.row]
+        
+        cell.setSwitch(for: switchView, at: indexPath)
+        cell.delegate = self
         cell.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
         return cell
     }
@@ -112,9 +120,19 @@ extension ScheduleViewController: UITableViewDataSource {
         let height = tableView.bounds.height
         return height / 7
     }
-    
 }
 
 extension ScheduleViewController: UITableViewDelegate {
+    
+}
 
+extension ScheduleViewController: ScheduleCellDelegate {
+    func switchChanged(forDay day: String, selected: Bool) {
+        if selected {
+            selectedDays.append(day)
+            //            switchStates.
+        } else {
+            selectedDays.removeAll(where: {$0 == day})
+        }
+    }
 }

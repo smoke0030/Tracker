@@ -7,9 +7,20 @@
 
 import UIKit
 
+protocol ScheduleCellDelegate: AnyObject {
+    func switchChanged(forDay day: String, selected: Bool)
+}
+
 class ScheduleCell: UITableViewCell {
     
-    let cellLabel: UILabel = {
+    var switchStates: [Bool] = []
+    
+    weak var delegate: ScheduleCellDelegate?
+    
+    var days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    var selectedDays: [String] = []
+    
+    let cellDaysLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -18,11 +29,11 @@ class ScheduleCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.addSubview(cellLabel)
+        contentView.addSubview(cellDaysLabel)
         
         NSLayoutConstraint.activate([
-            cellLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            cellLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            cellDaysLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            cellDaysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
         ])
     }
     
@@ -30,8 +41,9 @@ class ScheduleCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setSwitch(at indexPath: IndexPath) {
-        let switchView = UISwitch()
+    func setSwitch(for switchView: UISwitch, at indexPath: IndexPath) {
+        //        let switchView = UISwitch()
+        //        switchView.isOn = selectedDays.contains(days[indexPath.row])
         switchView.setOn(false, animated: true)
         switchView.tag = indexPath.row
         switchView.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
@@ -39,12 +51,8 @@ class ScheduleCell: UITableViewCell {
     }
     
     @objc func switchChanged(_ sender: UISwitch) {
-        if sender.isOn {
-            print("On")
-        } else {
-            print("Off")
-        }
-        
-        
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        let day = days[indexPath.row]
+        delegate?.switchChanged(forDay: day, selected: sender.isOn)
     }
 }

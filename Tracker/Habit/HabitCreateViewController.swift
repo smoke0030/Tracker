@@ -7,7 +7,18 @@
 
 import UIKit
 
+protocol HabitCreateViewControllerDelegate: AnyObject {
+    func createButtonTap(_ tracker: Tracker, category: String)
+    func reloadData()
+}
+
 class HabitCreateViewController: UIViewController {
+    
+    weak var createHabitViewControllerDelegate: HabitCreateViewControllerDelegate?
+    
+    private var trackers: [Tracker] = []
+    private lazy var category: String = "Домашние дела"
+    private var selectedDays: [String] = []
     
     private var habitTitleLabel: UILabel = {
         let label = UILabel()
@@ -16,6 +27,16 @@ class HabitCreateViewController: UIViewController {
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
+    }()
+    
+    private lazy var clearTextFieldButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        button.addTarget(self, action: #selector(clearTextFieldButtonTapped), for: .touchUpInside)
+        button.isHidden = true
+        button.tintColor = #colorLiteral(red: 0.7369984984, green: 0.7409694791, blue: 0.7575188279, alpha: 1)
+        return button
     }()
     
     private lazy var tableView: UITableView = {
@@ -83,12 +104,17 @@ class HabitCreateViewController: UIViewController {
         return stackView
     }()
     
+    
+    //MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupViews()
         setupConstraints()
+        textField.delegate = self
     }
+    
     
     @objc private func cancelButtonTapped() {
         print("cancel")
@@ -96,10 +122,21 @@ class HabitCreateViewController: UIViewController {
     }
     
     @objc private func doneButtonTapped() {
-        dismiss(animated: true) {
+        
+        guard let trackerTitle = textField.text, !trackerTitle.isEmpty else {
+            return
         }
         
-        print("create")
+        let object = Tracker(id: UUID(), name: trackerTitle, color: #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1  ), emoji: "🫡", schedule: [])
+        createHabitViewControllerDelegate?.createButtonTap(object, category: category)
+        createHabitViewControllerDelegate?.reloadData()
+        
+        view.window?.rootViewController?.dismiss(animated: true)
+        
+    }
+    
+    @objc private func clearTextFieldButtonTapped() {
+        textField.text = ""
     }
     
     private func setupConstraints() {
@@ -113,7 +150,9 @@ class HabitCreateViewController: UIViewController {
             textFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),
             textField.leadingAnchor.constraint(equalTo: textFieldView.leadingAnchor, constant: 16),
-            textField.trailingAnchor.constraint(equalTo: textFieldView.trailingAnchor, constant: -16),
+            textField.trailingAnchor.constraint(equalTo: clearTextFieldButton.leadingAnchor, constant: -12),
+            clearTextFieldButton.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),
+            clearTextFieldButton.trailingAnchor.constraint(equalTo: textFieldView.trailingAnchor, constant: -16),
             buttonsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonsStackView.widthAnchor.constraint(equalToConstant: view.bounds.width - 40),
@@ -129,12 +168,14 @@ class HabitCreateViewController: UIViewController {
         view.addSubview(habitTitleLabel)
         view.addSubview(textFieldView)
         textFieldView.addSubview(textField)
+        textFieldView.addSubview(clearTextFieldButton)
         view.backgroundColor = .white
         view.addSubview(tableView)
         view.addSubview(buttonsStackView)
         buttonsStackView.addArrangedSubview(cancelButton)
         buttonsStackView.addArrangedSubview(doneButton)
     }
+    
 }
 
 extension HabitCreateViewController: UITableViewDataSource {
@@ -147,8 +188,10 @@ extension HabitCreateViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         if indexPath.row == 0 {
             cell.titleLabel.text = "Категория"
+            cell.descriptionLabel.text = "Важное"
         } else {
             cell.titleLabel.text = "Расписание"
+            cell.descriptionLabel.text = selectedDays.joined(separator: ", ")
         }
         return cell
     }
@@ -157,13 +200,32 @@ extension HabitCreateViewController: UITableViewDataSource {
 extension HabitCreateViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let selectedCell = tableView.cellForRow(at: indexPath)
-//        selectedCell?.backgroundColor = .systemGray
         
         if indexPath.row == 0 {
             print("category")
         } else {
-            present(ScheduleViewController(), animated: true)
+            let scheduleViewController = ScheduleViewController()
+            scheduleViewController.delegate = self
+            present(scheduleViewController, animated: true)
         }
     }
+}
+
+extension HabitCreateViewController: UITextFieldDelegate {
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if let text = textField.text, text.isEmpty {
+            clearTextFieldButton.isHidden = true
+        } else {
+            clearTextFieldButton.isHidden = false
+        }
+    }
+}
+
+extension HabitCreateViewController: ScheduleViewControllerDelegate {
+    func didSelectScheduleDays(_ days: [String]) {
+        selectedDays = days
+        tableView.reloadData()
+    }
+    
 }

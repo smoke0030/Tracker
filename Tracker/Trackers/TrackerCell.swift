@@ -12,15 +12,20 @@ final class TrackerCell: UICollectionViewCell {
     var count = 0
     
     let label = UILabel()
-    let emoji = UILabel()
-    let emojiView: UIView = {
+    var emoji = UILabel()
+    var emojiView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
         
     }()
     
-    let trackerView = UIView()
+    let trackerView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
+    }()
     
     let plusButton: UIButton = {
         let button = UIButton()
@@ -40,9 +45,18 @@ final class TrackerCell: UICollectionViewCell {
     }()
     
     @objc func plusButtonTapped() {
-        plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-        plusButton.isEnabled = false
-        count += 1
+        if plusButton.imageView?.image == UIImage(systemName: "checkmark") {
+            plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
+            count -= 1
+        } else {
+            plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.8)
+            count += 1
+        }
+        
+        self.countLabel.text = "\(count) день"
+        print(count)
         
         
     }
@@ -59,7 +73,6 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        
         contentView.addSubview(countLabel)
         contentView.addSubview(trackerView)
         contentView.addSubview(plusButton)
@@ -71,7 +84,7 @@ final class TrackerCell: UICollectionViewCell {
     private func setupConstraints() {
         label.translatesAutoresizingMaskIntoConstraints = false
         emoji.translatesAutoresizingMaskIntoConstraints = false
-        trackerView.translatesAutoresizingMaskIntoConstraints = false
+        
         
         NSLayoutConstraint.activate([
             countLabel.topAnchor.constraint(equalTo: trackerView.bottomAnchor, constant: 12),
@@ -84,6 +97,7 @@ final class TrackerCell: UICollectionViewCell {
             
             trackerView.topAnchor.constraint(equalTo: contentView.topAnchor),
             trackerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            trackerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             trackerView.heightAnchor.constraint(equalToConstant: 90),
             
             label.topAnchor.constraint(equalTo: emojiView.bottomAnchor,constant: 8),
@@ -101,8 +115,9 @@ final class TrackerCell: UICollectionViewCell {
     }
     func set(object: Tracker) {
         
-        self.plusButton.backgroundColor = object.color
+        
         self.trackerView.backgroundColor = object.color
+        self.plusButton.backgroundColor = object.color
         self.trackerView.layer.cornerRadius = 16
         
         self.label.text = object.name
@@ -116,10 +131,9 @@ final class TrackerCell: UICollectionViewCell {
         self.emoji.textAlignment = .center
         self.emoji.font = .systemFont(ofSize: 12)
         
-        self.countLabel.text = "\(count)"
+        self.countLabel.text = "\(count) дней"
         self.countLabel.font = .systemFont(ofSize: 12)
         
-        self.backgroundColor = .white
         self.layer.cornerRadius = 16
     }
 }

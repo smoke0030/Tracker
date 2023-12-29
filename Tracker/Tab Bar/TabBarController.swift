@@ -17,9 +17,8 @@ class TabBarController: UITabBarController {
     
     private func setupTabBar() {
         
-        let vc = TrackerViewController.shared.categories.isEmpty ? UINavigationController(rootViewController: EmptyViewController()) : UINavigationController(rootViewController: TrackerViewController())
-        
-//        let vc = UINavigationController(rootViewController: TrackerViewController())
+       
+        let vc = UINavigationController(rootViewController: TrackerViewController())
         
         vc.tabBarItem.title = "Трекеры"
         vc.tabBarItem.image = UIImage(named: "trackerImage")

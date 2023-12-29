@@ -9,6 +9,8 @@ import UIKit
 
 class SelectTrackerTypeController: UIViewController {
     
+    weak var delegate: HabitCreateViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,7 +56,10 @@ class SelectTrackerTypeController: UIViewController {
     }()
     
     @objc func habitButoonTapped() {
-        present(HabitCreateViewController(), animated: true)
+        
+        let vc = HabitCreateViewController()
+        vc.createHabitViewControllerDelegate = delegate
+        present(vc, animated: true)
     }
     
     @objc func irregularEventButtonTapped() {
@@ -75,7 +80,7 @@ class SelectTrackerTypeController: UIViewController {
             buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             buttonsStackView.heightAnchor.constraint(equalToConstant: 140),
-           
+            
         ])
     }
 }
