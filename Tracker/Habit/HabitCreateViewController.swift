@@ -17,8 +17,8 @@ class HabitCreateViewController: UIViewController {
     weak var createHabitViewControllerDelegate: HabitCreateViewControllerDelegate?
     
     private var trackers: [Tracker] = []
-    private lazy var category: String = "Домашние дела"
-    private var selectedDays: [String] = []
+    
+    private var selectedDays: [WeekDay] = []
     
     private var habitTitleLabel: UILabel = {
         let label = UILabel()
@@ -47,10 +47,20 @@ class HabitCreateViewController: UIViewController {
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.showsVerticalScrollIndicator = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(HabitCell.self, forCellReuseIdentifier: "HabitCell")
+        tableView.register(HabitTableCell.self, forCellReuseIdentifier: "HabitTableCell")
         tableView.layer.cornerRadius = 16
         
         return tableView
+    }()
+    
+    private lazy var habitCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.dataSource = self
+        collectionView.delegate =  self
+        collectionView.register(HabitCollectionCell.self, forCellWithReuseIdentifier: "HabitCollectionCell")
+        collectionView.register(HabitCollectionHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HabitCollectionHeaderCell")
+        return collectionView
     }()
     
     private var textFieldView: UIView = {
@@ -127,10 +137,12 @@ class HabitCreateViewController: UIViewController {
             return
         }
         
-        let object = Tracker(id: UUID(), name: trackerTitle, color: #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1  ), emoji: "🫡", schedule: [])
+        let categories = ["Важное", "Домашние дела", "Разное"]
+        let category = categories.randomElement() ?? ""
+        
+        let object = Tracker(id: UUID(), name: trackerTitle, color: #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1  ), emoji: "🫡", schedule: self.selectedDays, comletedDays: 0)
         createHabitViewControllerDelegate?.createButtonTap(object, category: category)
         createHabitViewControllerDelegate?.reloadData()
-        
         view.window?.rootViewController?.dismiss(animated: true)
         
     }
@@ -161,6 +173,10 @@ class HabitCreateViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.heightAnchor.constraint(equalToConstant: 150),
+            habitCollectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 50),
+            habitCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            habitCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            habitCollectionView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: 16)
         ])
     }
     
@@ -171,6 +187,7 @@ class HabitCreateViewController: UIViewController {
         textFieldView.addSubview(clearTextFieldButton)
         view.backgroundColor = .white
         view.addSubview(tableView)
+        view.addSubview(habitCollectionView)
         view.addSubview(buttonsStackView)
         buttonsStackView.addArrangedSubview(cancelButton)
         buttonsStackView.addArrangedSubview(doneButton)
@@ -178,31 +195,38 @@ class HabitCreateViewController: UIViewController {
     
 }
 
+//MARK: - UITableViewDataSource
+
 extension HabitCreateViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "HabitCell") as! HabitCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "HabitTableCell") as! HabitTableCell
         cell.selectionStyle = .none
         if indexPath.row == 0 {
             cell.titleLabel.text = "Категория"
             cell.descriptionLabel.text = "Важное"
         } else {
             cell.titleLabel.text = "Расписание"
-            cell.descriptionLabel.text = selectedDays.joined(separator: ", ")
+            let schedule = selectedDays.isEmpty ? "" : selectedDays.map { $0.shortTitle }.joined(separator: ", ")
+            cell.descriptionLabel.text = schedule
+            
         }
         return cell
     }
 }
+
+//MARK: - UITableViewDelegate
 
 extension HabitCreateViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.row == 0 {
-            print("category")
+            let categoryVC = CategoryViewController()
+            present(categoryVC, animated: true)
         } else {
             let scheduleViewController = ScheduleViewController()
             scheduleViewController.delegate = self
@@ -210,6 +234,8 @@ extension HabitCreateViewController: UITableViewDelegate {
         }
     }
 }
+
+//MARK: - UITextFieldDelegate
 
 extension HabitCreateViewController: UITextFieldDelegate {
     
@@ -222,10 +248,58 @@ extension HabitCreateViewController: UITextFieldDelegate {
     }
 }
 
+//MARK: - ScheduleViewControllerDelegate
+
 extension HabitCreateViewController: ScheduleViewControllerDelegate {
-    func didSelectScheduleDays(_ days: [String]) {
+    func didSelectScheduleDays(_ days: [WeekDay]) {
         selectedDays = days
         tableView.reloadData()
     }
     
+}
+
+//MARK: - UICollectionViewDataSource
+
+extension HabitCreateViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        6
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitCollectionCell", for: indexPath) as! HabitCollectionCell
+        if indexPath.section == 0 {
+            cell.label.text = "❤️"
+        } else {
+            cell.label.text = "🌝"
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HabitCollectionHeaderCell", for: indexPath) as! HabitCollectionHeaderCell
+        let headers = ["Emoji", "Цвет"]
+        cell.title.text = headers[indexPath.row]
+        return cell
+    }
+    
+    
+}
+
+//MARK: - UICollectionViewDelegateFlowLayout
+
+extension HabitCreateViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let indexPath = IndexPath(row: 0, section: section)
+        let headerView = self.collectionView(collectionView,viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+        
+        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
+                                                         height: 20),
+                                                  withHorizontalFittingPriority: .required,
+                                                  verticalFittingPriority: .fittingSizeLevel)
+    }
 }

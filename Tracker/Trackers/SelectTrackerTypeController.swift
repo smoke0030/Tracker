@@ -63,7 +63,8 @@ class SelectTrackerTypeController: UIViewController {
     }
     
     @objc func irregularEventButtonTapped() {
-        print("irregular")
+        let vc = IrregularEventViewController()
+        present(vc, animated: true)
     }
     
     func setupViews() {

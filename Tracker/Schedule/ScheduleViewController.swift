@@ -8,15 +8,14 @@
 import UIKit
 
 protocol ScheduleViewControllerDelegate: AnyObject {
-    func didSelectScheduleDays(_ days: [String])
+    func didSelectScheduleDays(_ days: [WeekDay])
 }
 
 class ScheduleViewController: UIViewController {
     
     weak var delegate: ScheduleViewControllerDelegate?
     
-    private let weekDays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-    private var selectedDays: [String] = []
+    private var selectedDays: [WeekDay] = []
     
     private lazy var scheduleTitle: UILabel = {
         let label = UILabel()
@@ -97,7 +96,8 @@ extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as! ScheduleCell
         let switchView = UISwitch()
-        cell.cellDaysLabel.text = weekDays[indexPath.row]
+        let weekDay = WeekDay.allCases[indexPath.row]
+        cell.cellDaysLabel.text = weekDay.rawValue
         cell.setSwitch(for: switchView, at: indexPath)
         cell.delegate = self
         cell.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
@@ -105,7 +105,7 @@ extension ScheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastCell = indexPath.row == weekDays.count - 1
+        let lastCell = indexPath.row == 6
         if lastCell {
             cell.separatorInset = UIEdgeInsets(top: 0, left: cell.bounds.width, bottom: 0, right: 0)
         } else {
@@ -124,11 +124,42 @@ extension ScheduleViewController: UITableViewDelegate {
 }
 
 extension ScheduleViewController: ScheduleCellDelegate {
-    func switchChanged(forDay day: String, selected: Bool) {
+    func switchChanged(forDay day: WeekDay, selected: Bool) {
         if selected {
             selectedDays.append(day)
         } else {
-            selectedDays.removeAll(where: {$0 == day})
+            selectedDays.removeAll(where: { $0 == day})
+        }
+    }
+}
+
+
+enum WeekDay: String, CaseIterable {
+    case monday = "Понедельник"
+    case tuesday = "Вторник"
+    case wednesday = "Среда"
+    case thursday = "Четверг"
+    case friday = "Пятница"
+    case saturday = "Суббота"
+    case sunday = "Воскресенье"
+
+    var shortTitle: String {
+        switch self {
+
+        case .monday:
+            return "Пн"
+        case .tuesday:
+            return "Вт"
+        case .wednesday:
+            return "Ср"
+        case .thursday:
+            return "Чт"
+        case .friday:
+            return "Пт"
+        case .saturday:
+            return "Сб"
+        case .sunday:
+            return "Вс"
         }
     }
 }

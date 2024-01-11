@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ScheduleCellDelegate: AnyObject {
-    func switchChanged(forDay day: String, selected: Bool)
+    func switchChanged(forDay day: WeekDay, selected: Bool)
 }
 
 class ScheduleCell: UITableViewCell {
@@ -17,8 +17,9 @@ class ScheduleCell: UITableViewCell {
     
     weak var delegate: ScheduleCellDelegate?
     
-    var days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-    var selectedDays: [String] = []
+//    var days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    
+    private var weekDays: WeekDay?
     
     let cellDaysLabel: UILabel = {
         let label = UILabel()
@@ -51,7 +52,7 @@ class ScheduleCell: UITableViewCell {
     
     @objc func switchChanged(_ sender: UISwitch) {
         let indexPath = IndexPath(row: sender.tag, section: 0)
-        let day = days[indexPath.row]
+        let day = WeekDay.allCases[indexPath.row]
         delegate?.switchChanged(forDay: day, selected: sender.isOn)
         
     }

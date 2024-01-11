@@ -12,10 +12,11 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
-        //        setTabBarAppearance()
+        setBorder()
     }
     
     private func setupTabBar() {
+        
         
        
         let vc = UINavigationController(rootViewController: TrackerViewController())
@@ -35,10 +36,13 @@ class TabBarController: UITabBarController {
         return vc
     }
     
-    //    private func setTabBarAppearance() {
-    //        let roundLayer = CAShapeLayer()
-    //
-    //    }
+    private func setBorder() {
+        let topBorder = CALayer()
+        topBorder.frame = CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 1)
+        topBorder.backgroundColor = #colorLiteral(red: 0.7369984984, green: 0.7409694791, blue: 0.7575188279, alpha: 1)
+        tabBar.layer.addSublayer(topBorder)
+    }
+    
 }
 
 

@@ -7,9 +7,19 @@
 
 import UIKit
 
+protocol TrackerCellDelegate: AnyObject {
+    func comletedTracker(id: UUID, indexPath: IndexPath)
+    func uncomletedTracker(id: UUID, indexPath: IndexPath)
+}
+
 final class TrackerCell: UICollectionViewCell {
     
-    var count = 0
+    private var isComleted: Bool = false
+    private var trackerID: UUID?
+    private var indexPath: IndexPath?
+    
+    
+    weak var delegate: TrackerCellDelegate?
     
     let label = UILabel()
     var emoji = UILabel()
@@ -29,7 +39,6 @@ final class TrackerCell: UICollectionViewCell {
     
     let plusButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 17
@@ -45,20 +54,16 @@ final class TrackerCell: UICollectionViewCell {
     }()
     
     @objc func plusButtonTapped() {
-        if plusButton.imageView?.image == UIImage(systemName: "checkmark") {
-            plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
-            count -= 1
-        } else {
-            plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.8)
-            count += 1
+        guard let trackerID = trackerID, let indexPath = indexPath else {
+            assertionFailure("no tracker id")
+            return
         }
         
-        self.countLabel.text = "\(count) день"
-        print(count)
-        
-        
+        if isComleted {
+            delegate?.uncomletedTracker(id: trackerID, indexPath: indexPath)
+        } else {
+            delegate?.comletedTracker(id: trackerID, indexPath: indexPath)
+        }
     }
     
     override init(frame: CGRect) {
@@ -73,9 +78,9 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        contentView.addSubview(countLabel)
-        contentView.addSubview(trackerView)
-        contentView.addSubview(plusButton)
+        [countLabel, trackerView, plusButton].forEach {
+            contentView.addSubview($0)
+        }
         trackerView.addSubview(label)
         trackerView.addSubview(emojiView)
         emojiView.addSubview(emoji)
@@ -113,12 +118,28 @@ final class TrackerCell: UICollectionViewCell {
             emojiView.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
-    func set(object: Tracker) {
+    func set(object: Tracker, 
+             isComleted: Bool,
+             completedDays: Int,
+             indexPath: IndexPath
+        ) {
         
+        self.indexPath = indexPath
+        self.isComleted = isComleted
+        self.trackerID = object.id
         
         self.trackerView.backgroundColor = object.color
-        self.plusButton.backgroundColor = object.color
+        if !isComleted {
+            self.plusButton.backgroundColor = object.color
+            self.plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+        } else {
+            self.plusButton.backgroundColor = object.color.withAlphaComponent(0.5)
+            self.plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        }
         self.trackerView.layer.cornerRadius = 16
+        
+        let wordDay = convertCompletedDays(completedDays)
+        countLabel.text = "\(wordDay)"
         
         self.label.text = object.name
         self.label.textColor  = .white
@@ -131,9 +152,23 @@ final class TrackerCell: UICollectionViewCell {
         self.emoji.textAlignment = .center
         self.emoji.font = .systemFont(ofSize: 12)
         
-        self.countLabel.text = "\(count) дней"
-        self.countLabel.font = .systemFont(ofSize: 12)
-        
         self.layer.cornerRadius = 16
+    }
+    
+    private func convertCompletedDays(_ completedDays: Int) -> String {
+        let number = completedDays % 10
+        let lastTwoNumbers = completedDays % 100
+        if lastTwoNumbers >= 11 && lastTwoNumbers <= 19 {
+            return "\(completedDays) дней"
+        }
+
+        switch number {
+        case 1:
+            return "\(completedDays) день"
+        case 2, 3, 4:
+            return "\(completedDays) дня"
+        default:
+            return "\(completedDays) дней"
+        }
     }
 }
