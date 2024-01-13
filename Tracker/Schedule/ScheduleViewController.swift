@@ -82,7 +82,6 @@ class ScheduleViewController: UIViewController {
     }
     
     @objc func doneButtonTapped(_ sender: UIAction) {
-        print("Selected days", selectedDays)
         delegate?.didSelectScheduleDays(selectedDays)
         dismiss(animated: true)
     }

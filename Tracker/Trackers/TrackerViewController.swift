@@ -176,6 +176,22 @@ final class TrackerViewController: UIViewController {
         
     }
     
+    private func isTrackerComletedToday(id: UUID)  -> Bool {
+        completedTrackers.contains { tracker in
+            tracker.id == id &&
+            tracker.date == datePicker.date
+        }
+    }
+    
+    private func isDateGreaterThanCurrent(cell: TrackerCell) {
+        let dateisGreater = datePicker.date <= currentDate ? true : false
+        
+        if dateisGreater {
+            cell.plusButton.isEnabled = true
+        } else {
+            cell.plusButton.isEnabled = false
+        }
+    }
     
     @objc private func dateChanged(_ sender: UIDatePicker) {
         reloadVisibleCategories()
@@ -220,6 +236,7 @@ extension TrackerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as! TrackerCell
         cell.delegate = self
+        isDateGreaterThanCurrent(cell: cell)
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let isComletedToday = isTrackerComletedToday(id: tracker.id)
         let comletedDays = completedTrackers.filter { $0.id ==
@@ -227,13 +244,6 @@ extension TrackerViewController: UICollectionViewDataSource {
         }.count
         cell.set(object: tracker, isComleted: isComletedToday, completedDays: comletedDays, indexPath: indexPath)
         return cell
-    }
-    
-    private func isTrackerComletedToday(id: UUID)  -> Bool {
-        completedTrackers.contains { tracker in
-            tracker.id == id &&
-            tracker.date == datePicker.date
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -303,6 +313,7 @@ extension TrackerViewController: HabitCreateViewControllerDelegate {
 
 extension TrackerViewController: TrackerCellDelegate {
     func comletedTracker(id: UUID, indexPath: IndexPath) {
+        
         
         let trackerRecord = TrackerRecord(id: id, date: datePicker.date)
         completedTrackers.append(trackerRecord)
