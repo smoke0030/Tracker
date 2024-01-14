@@ -204,6 +204,7 @@ extension HabitCreateViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HabitTableCell") as! HabitTableCell
+
         cell.selectionStyle = .none
         if indexPath.row == 0 {
             cell.titleLabel.text = "Категория"
@@ -211,8 +212,7 @@ extension HabitCreateViewController: UITableViewDataSource {
         } else {
             cell.titleLabel.text = "Расписание"
             let schedule = selectedDays.isEmpty ? "" : selectedDays.map { $0.shortTitle }.joined(separator: ", ")
-            cell.descriptionLabel.text = schedule
-            
+            cell.descriptionLabel.text = schedule        
         }
         return cell
     }
@@ -282,8 +282,12 @@ extension HabitCreateViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HabitCollectionHeaderCell", for: indexPath) as! HabitCollectionHeaderCell
-        let headers = ["Emoji", "Цвет"]
-        cell.title.text = headers[indexPath.row]
+        if indexPath.section == 0{
+            cell.title.text = "Emoji"
+        } else {
+            cell.title.text = "Цвет"
+        }
+        
         return cell
     }
     

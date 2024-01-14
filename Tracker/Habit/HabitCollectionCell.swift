@@ -21,7 +21,7 @@ class HabitCollectionCell: UICollectionViewCell {
         contentView.addSubview(label)
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     

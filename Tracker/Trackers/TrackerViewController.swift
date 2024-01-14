@@ -32,17 +32,27 @@ final class TrackerViewController: UIViewController {
     private lazy var emptyView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.image = UIImage(named: "mockImage")
+//        view.image = UIImage(named: "mockImage")
         return view
     }()
     
     private let emptyLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Что будем отслеживать?"
+//        label.text = "Что будем отслеживать?"
         label.font = .systemFont(ofSize: 14)
         return label
     }()
+    
+    private let dateChangeButton: UIButton = {
+       let button = UIButton()
+        button.addTarget(self, action: #selector(openDatePicker), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc private func openDatePicker() {
+        datePicker.isHidden = false
+    }
     
     private let datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
@@ -84,25 +94,30 @@ final class TrackerViewController: UIViewController {
         setupContraints()
         setupNavBar()
         datePicker.addTarget(self, action: #selector(dateChanged(_ :)), for: .valueChanged)
-        
-        if categories.isEmpty {
-            [emptyView, emptyLabel].forEach {
-                view.addSubview($0)
-            }
-            NSLayoutConstraint.activate([
-                emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                emptyLabel.topAnchor.constraint(equalTo: emptyView.bottomAnchor, constant: 8),
-                
-            ])
             
-        }
         datePicker.date = currentDate
         reloadVisibleCategories()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(tapGesture)
+        
+        [emptyView, emptyLabel].forEach {
+            view.addSubview($0)
+        }
+        NSLayoutConstraint.activate([
+            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyLabel.topAnchor.constraint(equalTo: emptyView.bottomAnchor, constant: 8),
+            
+        ])
+        
+        if visibleCategories.isEmpty {
+            emptyView.isHidden = false
+            emptyLabel.isHidden = false
+            emptyView.image = UIImage(named: "mockImage")
+            emptyLabel.text = "Что будем отслеживать?"
+        }
     }
     
     private func setupContraints() {
@@ -144,6 +159,22 @@ final class TrackerViewController: UIViewController {
         navBar.topItem?.setRightBarButton(customBarItem, animated: false)
     }
     
+    private func setEmptyVIew() {
+        if visibleCategories.isEmpty {
+            emptyView.isHidden = false
+            emptyLabel.isHidden = false
+            emptyView.image = UIImage(named: "notFound")
+            emptyView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+            emptyLabel.text = "Ничего не найдено"
+            
+           
+        } else {
+            emptyView.isHidden = true
+            emptyLabel.isHidden = true
+        }
+    }
+    
     private func reloadVisibleCategories() {
         let selectedDate = datePicker.date
         let calendar = Calendar.current
@@ -162,7 +193,10 @@ final class TrackerViewController: UIViewController {
                 let dayCondition = tracker.schedule.contains { weekDay in
                     weekDay.shortTitle == day
                 }
+                
                 return textCondition && dayCondition
+                
+                
             }
             
             
@@ -172,6 +206,8 @@ final class TrackerViewController: UIViewController {
             return TrackerCategory(title: category.title,
                                    trackers: trackers)
         }
+        
+        setEmptyVIew()
         collectionView.reloadData()
         
     }

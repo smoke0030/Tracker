@@ -16,18 +16,20 @@ class HabitTableCell: UITableViewCell {
         return button
     }()
     
-   lazy var titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 17, weight: .regular)
         label.textAlignment = .left
         return label
     }()
     
     lazy var descriptionLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = #colorLiteral(red: 0.7369984984, green: 0.7409694791, blue: 0.7575188279, alpha: 1)
         label.textAlignment = .left
+        label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
     
@@ -43,12 +45,25 @@ class HabitTableCell: UITableViewCell {
             detailButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -14),
             descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -14),
             contentView.heightAnchor.constraint(equalToConstant: 75)
         ])
         
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if descriptionLabel.text?.isEmpty ?? true {
+            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+            descriptionLabel.isHidden = true
+        } else {
+            titleLabel.centerYAnchor.constraint(equalTo: contentView.topAnchor, constant: 25).isActive = true
+            descriptionLabel.isHidden = false
+        }
     }
     
     required init?(coder: NSCoder) {
