@@ -9,7 +9,11 @@ import UIKit
 
 final class TrackerViewController: UIViewController {
     
-    private let dateFormatter = DateFormatter()
+    private let dateFormatter: DateFormatter = {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "dd.MM.yy"
+        return dateformatter
+    }()
     
     private lazy var collectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -32,35 +36,27 @@ final class TrackerViewController: UIViewController {
     private lazy var emptyView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.image = UIImage(named: "mockImage")
+        
         return view
     }()
     
     private let emptyLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-//        label.text = "Что будем отслеживать?"
         label.font = .systemFont(ofSize: 14)
         return label
     }()
-    
-    private let dateChangeButton: UIButton = {
-       let button = UIButton()
-        button.addTarget(self, action: #selector(openDatePicker), for: .touchUpInside)
-        return button
-    }()
-    
-    @objc private func openDatePicker() {
-        datePicker.isHidden = false
-    }
-    
-    private let datePicker: UIDatePicker = {
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .compact
-        datePicker.locale = Locale(identifier: "ru_RU")
-        return datePicker
-    }()
+
+    private lazy var datePicker: UIDatePicker = {
+            var datePicker = UIDatePicker()
+            datePicker.datePickerMode = .date
+            datePicker.preferredDatePickerStyle = .compact
+            datePicker.tintColor = .ypBlue
+            datePicker.locale = Locale(identifier: "ru_RU")
+            datePicker.calendar.firstWeekday = 2
+            datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+            return datePicker
+        }()
     
     private lazy var searchTextField: UISearchTextField = {
         let textField = UISearchTextField()
@@ -88,19 +84,23 @@ final class TrackerViewController: UIViewController {
     
     var currentDate = Date()
     
+    var formattedDate: Date?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupContraints()
         setupNavBar()
-        datePicker.addTarget(self, action: #selector(dateChanged(_ :)), for: .valueChanged)
-            
         datePicker.date = currentDate
         reloadVisibleCategories()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(tapGesture)
         
+        setupEmptyViews()
+    }
+    
+    private func setupEmptyViews() {
         [emptyView, emptyLabel].forEach {
             view.addSubview($0)
         }
@@ -159,7 +159,7 @@ final class TrackerViewController: UIViewController {
         navBar.topItem?.setRightBarButton(customBarItem, animated: false)
     }
     
-    private func setEmptyVIew() {
+    private func configureEmptyVIew() {
         if visibleCategories.isEmpty {
             emptyView.isHidden = false
             emptyLabel.isHidden = false
@@ -168,7 +168,7 @@ final class TrackerViewController: UIViewController {
             emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
             emptyLabel.text = "Ничего не найдено"
             
-           
+            
         } else {
             emptyView.isHidden = true
             emptyLabel.isHidden = true
@@ -207,7 +207,7 @@ final class TrackerViewController: UIViewController {
                                    trackers: trackers)
         }
         
-        setEmptyVIew()
+        configureEmptyVIew()
         collectionView.reloadData()
         
     }
@@ -242,6 +242,7 @@ final class TrackerViewController: UIViewController {
     }
     
     @objc func hideKeyboard() {
+        reloadVisibleCategories()
         searchTextField.resignFirstResponder()
     }
 }
