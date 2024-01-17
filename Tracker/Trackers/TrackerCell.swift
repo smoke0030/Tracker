@@ -21,8 +21,16 @@ final class TrackerCell: UICollectionViewCell {
     
     weak var delegate: TrackerCellDelegate?
     
-    let label = UILabel()
+   
     var emoji = UILabel()
+    
+    let label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        return label
+    }()
+    
     var emojiView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +95,6 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func setupConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
         emoji.translatesAutoresizingMaskIntoConstraints = false
         
         

@@ -82,6 +82,8 @@ final class TrackerViewController: UIViewController {
     
     private var completedTrackers: [TrackerRecord] = []
     
+   
+    
     var currentDate = Date()
     
     var formattedDate: Date?
@@ -189,10 +191,12 @@ final class TrackerViewController: UIViewController {
             let trackers = category.trackers.filter { tracker in
                 let textCondition = filterText.isEmpty ||
                 tracker.name.lowercased().contains(filterText)
+                print(tracker.comletedDays)
                 
                 let dayCondition = tracker.schedule.contains { weekDay in
                     weekDay.shortTitle == day
                 }
+                
                 
                 return textCondition && dayCondition
                 
@@ -236,7 +240,8 @@ final class TrackerViewController: UIViewController {
     
     @objc private func addButtonTapped() {
         let selectTrackerTypeController = SelectTrackerTypeController()
-        selectTrackerTypeController.delegate = self
+        selectTrackerTypeController.habitCreateViewControllerDelegate = self
+        selectTrackerTypeController.irregularViewControllerDelegate = self
         self.present(selectTrackerTypeController, animated: true)
         
     }
@@ -344,6 +349,30 @@ extension TrackerViewController: HabitCreateViewControllerDelegate {
     func reloadData() {
         reloadVisibleCategories()
     }
+}
+
+
+extension TrackerViewController: IrregularEventViewControllerDelegate {
+    func createButtonTapped(_ tracker: Tracker, category: String) {
+        if let index = categories.firstIndex(where: { $0.title == category }) {
+            var updatedTrackers = categories[index].trackers
+            updatedTrackers.append(tracker)
+            let updatedCategory =  TrackerCategory(title: category, trackers: updatedTrackers)
+            categories[index] = updatedCategory
+        } else {
+            let newCategory =  TrackerCategory(title: category, trackers: [tracker])
+            categories.append(newCategory)
+        }
+        emptyView.isHidden = true
+        emptyLabel.isHidden = true
+        reloadData()
+    }
+    
+    func reloadTrackersData() {
+        reloadVisibleCategories()
+    }
+    
+    
 }
 
 //MARK: - TrackerCellDelegate

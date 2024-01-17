@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HabitCollectionColorHeaderCell: UICollectionReusableView {
+class IrregularEmojiCollectionHeaderCell: UICollectionReusableView {
     
     var title: UILabel = {
         let title = UILabel()
