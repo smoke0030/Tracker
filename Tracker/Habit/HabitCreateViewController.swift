@@ -148,6 +148,7 @@ class HabitCreateViewController: UIViewController {
         addRandomColors()
         setupViews()
         setupConstraints()
+        createGesture()
         textField.delegate = self
     }
     
@@ -167,7 +168,7 @@ class HabitCreateViewController: UIViewController {
         let category = categories.randomElement() ?? ""
         
         
-        let object = Tracker(id: UUID(), name: trackerTitle, color: #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1), emoji: "🔥", schedule: self.selectedDays, comletedDays: 0)
+        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays, comletedDays: 0)
         createHabitViewControllerDelegate?.createButtonTap(object, category: category)
         createHabitViewControllerDelegate?.reloadData()
         view.window?.rootViewController?.dismiss(animated: true)
@@ -176,6 +177,16 @@ class HabitCreateViewController: UIViewController {
     
     @objc private func clearTextFieldButtonTapped() {
         textField.text = ""
+    }
+    
+    @objc private func hideKeyboard() {
+        textField.resignFirstResponder()
+    }
+    
+    private func createGesture() {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        gesture.delegate = self
+        view.addGestureRecognizer(gesture)
     }
     
     private func generateRandomColor() -> UIColor {
@@ -411,3 +422,16 @@ extension HabitCreateViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
+extension HabitCreateViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if let view = touch.view,
+           view.isDescendant(of: habitCollectionColorView) ||
+            view.isDescendant(of: tableView) ||
+            view.isDescendant(of: habitCollectionEmojiView) {
+            
+            return false
+        }
+
+        return true
+    }
+}

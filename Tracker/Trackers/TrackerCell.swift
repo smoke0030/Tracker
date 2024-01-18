@@ -22,30 +22,32 @@ final class TrackerCell: UICollectionViewCell {
     weak var delegate: TrackerCellDelegate?
     
    
-    var emoji = UILabel()
+    private var emoji = UILabel()
     
-    let label: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = 2
         return label
     }()
     
-    var emojiView: UIView = {
+    private var emojiView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
         
     }()
     
-    let trackerView : UIView = {
+    private let trackerView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
     }()
     
-    let plusButton: UIButton = {
+     let plusButton: UIButton = {
         let button = UIButton()
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +56,7 @@ final class TrackerCell: UICollectionViewCell {
         return button
     }()
     
-    let countLabel: UILabel = {
+    private let countLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
@@ -112,9 +114,10 @@ final class TrackerCell: UICollectionViewCell {
             trackerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             trackerView.heightAnchor.constraint(equalToConstant: 90),
             
-            label.topAnchor.constraint(equalTo: emojiView.bottomAnchor,constant: 8),
+            label.topAnchor.constraint(equalTo: emojiView.bottomAnchor,constant: 5),
             label.leadingAnchor.constraint(equalTo: trackerView.leadingAnchor, constant: 12),
-            label.heightAnchor.constraint(equalToConstant: 34),
+            label.trailingAnchor.constraint(equalTo: trackerView.trailingAnchor, constant: -12),
+            label.bottomAnchor.constraint(equalTo: trackerView.bottomAnchor, constant: -12),
             
             emoji.centerXAnchor.constraint(equalTo: emojiView.centerXAnchor),
             emoji.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor),
@@ -130,6 +133,9 @@ final class TrackerCell: UICollectionViewCell {
              completedDays: Int,
              indexPath: IndexPath
         ) {
+        
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.26
         
         self.indexPath = indexPath
         self.isComleted = isComleted
@@ -148,9 +154,10 @@ final class TrackerCell: UICollectionViewCell {
         let wordDay = convertCompletedDays(completedDays)
         countLabel.text = "\(wordDay)"
         
-        self.label.text = object.name
+//        self.label.text = object.name
+        self.label.attributedText = NSMutableAttributedString(string: object.name, attributes: [NSAttributedString.Key.paragraphStyle : paragraphStyle])
         self.label.textColor  = .white
-        self.label.font = .systemFont(ofSize: 12)
+//        self.label.font = .systemFont(ofSize: 12)
         
         self.emojiView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
         self.emojiView.layer.cornerRadius = 13

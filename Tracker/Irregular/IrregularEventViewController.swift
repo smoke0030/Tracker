@@ -436,7 +436,6 @@ extension IrregularEventViewController: UIGestureRecognizerDelegate {
             view.isDescendant(of: tableView) ||
             view.isDescendant(of: emojiCollectionView) {
             
-            // Разрешите жест нажатия только в случае, если касание не происходит на ячейке таблицы
             return false
         }
 
