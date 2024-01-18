@@ -47,7 +47,7 @@ final class TrackerViewController: UIViewController {
         return label
     }()
 
-    private var datePicker: UIDatePicker = {
+    private lazy var datePicker: UIDatePicker = {
             let datePicker = UIDatePicker()
             datePicker.preferredDatePickerStyle = .compact
             datePicker.datePickerMode = .date
@@ -221,8 +221,8 @@ final class TrackerViewController: UIViewController {
     
     private func isTrackerComletedToday(id: UUID)  -> Bool {
         completedTrackers.contains { tracker in
-            tracker.id == id &&
-            tracker.date == datePicker.date
+            let isSameDay = Calendar.current.isDate(tracker.date, inSameDayAs: datePicker.date)
+            return tracker.id == id && isSameDay
         }
     }
     
@@ -393,8 +393,8 @@ extension TrackerViewController: TrackerCellDelegate {
     func uncomletedTracker(id: UUID, indexPath: IndexPath) {
         
         completedTrackers.removeAll { trackerRecord in
-            trackerRecord.id == id &&
-            trackerRecord.date == datePicker.date
+            let isSameDay = Calendar.current.isDate(trackerRecord.date, inSameDayAs: datePicker.date)
+            return trackerRecord.id == id && isSameDay
         }
         
         collectionView.reloadItems(at: [indexPath])
