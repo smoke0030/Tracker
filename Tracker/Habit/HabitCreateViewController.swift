@@ -12,7 +12,7 @@ protocol HabitCreateViewControllerDelegate: AnyObject {
     func reloadData()
 }
 
-class HabitCreateViewController: UIViewController {
+final class HabitCreateViewController: UIViewController {
     
     weak var createHabitViewControllerDelegate: HabitCreateViewControllerDelegate?
     

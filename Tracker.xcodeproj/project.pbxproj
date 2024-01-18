@@ -185,8 +185,8 @@
 		84B7BFFE2B18B0430085E8EF /* Trackers */ = {
 			isa = PBXGroup;
 			children = (
-				84BF06A72B278DAE00C235CD /* SelectTrackerTypeController.swift */,
 				84B7BF722B16212C0085E8EF /* TrackerViewController.swift */,
+				84BF06A72B278DAE00C235CD /* SelectTrackerTypeController.swift */,
 				846812362B2B224C00E52E53 /* TrackerCell.swift */,
 				846812392B2CD59400E52E53 /* TrackerHeaderCell.swift */,
 			);

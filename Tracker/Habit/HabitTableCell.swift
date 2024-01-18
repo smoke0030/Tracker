@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HabitTableCell: UITableViewCell {
+final class HabitTableCell: UITableViewCell {
     
     private lazy var detailButton: UIButton = {
         let button = UIButton()

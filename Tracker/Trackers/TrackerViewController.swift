@@ -47,13 +47,14 @@ final class TrackerViewController: UIViewController {
         return label
     }()
 
-    private lazy var datePicker: UIDatePicker = {
-            var datePicker = UIDatePicker()
-            datePicker.datePickerMode = .date
+    private var datePicker: UIDatePicker = {
+            let datePicker = UIDatePicker()
             datePicker.preferredDatePickerStyle = .compact
+            datePicker.datePickerMode = .date
             datePicker.tintColor = .ypBlue
             datePicker.locale = Locale(identifier: "ru_RU")
             datePicker.calendar.firstWeekday = 2
+            datePicker.clipsToBounds = true
             datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
             return datePicker
         }()
@@ -95,6 +96,7 @@ final class TrackerViewController: UIViewController {
         setupNavBar()
         datePicker.date = currentDate
         reloadVisibleCategories()
+        
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -158,6 +160,7 @@ final class TrackerViewController: UIViewController {
         addTaskButton.tintColor = .black
         navBar.topItem?.setLeftBarButton(addTaskButton, animated: false)
         let customBarItem = UIBarButtonItem(customView: datePicker)
+        customBarItem.customView?.widthAnchor.constraint(equalToConstant: 120).isActive = true
         navBar.topItem?.setRightBarButton(customBarItem, animated: false)
     }
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IrregularColorCollectionHeaderCell: UICollectionReusableView {
+final class IrregularColorCollectionHeaderCell: UICollectionReusableView {
     
     var title: UILabel = {
         let title = UILabel()

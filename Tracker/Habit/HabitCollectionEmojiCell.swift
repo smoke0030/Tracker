@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HabitCollectionEmojiCell: UICollectionViewCell {
+final class HabitCollectionEmojiCell: UICollectionViewCell {
     
     var label: UILabel = {
         let label = UILabel()

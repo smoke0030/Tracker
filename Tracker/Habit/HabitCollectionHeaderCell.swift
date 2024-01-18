@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HabitCollectionColorHeaderCell: UICollectionReusableView {
+final class HabitCollectionColorHeaderCell: UICollectionReusableView {
     
     var title: UILabel = {
         let title = UILabel()

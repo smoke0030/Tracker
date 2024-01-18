@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IrregularColorCollectionCell: UICollectionViewCell {
+final class IrregularColorCollectionCell: UICollectionViewCell {
     
     var label: UILabel = {
         let label = UILabel()

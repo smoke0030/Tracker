@@ -154,10 +154,8 @@ final class TrackerCell: UICollectionViewCell {
         let wordDay = convertCompletedDays(completedDays)
         countLabel.text = "\(wordDay)"
         
-//        self.label.text = object.name
         self.label.attributedText = NSMutableAttributedString(string: object.name, attributes: [NSAttributedString.Key.paragraphStyle : paragraphStyle])
         self.label.textColor  = .white
-//        self.label.font = .systemFont(ofSize: 12)
         
         self.emojiView.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
         self.emojiView.layer.cornerRadius = 13

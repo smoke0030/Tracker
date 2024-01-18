@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IrregularTableCell: UITableViewCell {
+final class IrregularTableCell: UITableViewCell {
     
     private lazy var detailButton: UIButton = {
         let button = UIButton()

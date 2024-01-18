@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IrregularEmojiCollectionHeaderCell: UICollectionReusableView {
+final class IrregularEmojiCollectionHeaderCell: UICollectionReusableView {
     
     var title: UILabel = {
         let title = UILabel()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class IrregularEmojiCollectionCell: UICollectionViewCell {
+final class IrregularEmojiCollectionCell: UICollectionViewCell {
     
     var label: UILabel = {
         let label = UILabel()

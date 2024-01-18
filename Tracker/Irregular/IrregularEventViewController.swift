@@ -12,7 +12,7 @@ protocol IrregularEventViewControllerDelegate: AnyObject {
     func reloadTrackersData()
 }
 
-class IrregularEventViewController: UIViewController {
+final class IrregularEventViewController: UIViewController {
     
     let dateFormatter = DateFormatter()
     

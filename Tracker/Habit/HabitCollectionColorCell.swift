@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HabitCollectionColorCell: UICollectionViewCell {
+final class HabitCollectionColorCell: UICollectionViewCell {
     
     var label: UILabel = {
         let label = UILabel()
