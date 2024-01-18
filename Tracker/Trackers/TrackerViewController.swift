@@ -194,7 +194,6 @@ final class TrackerViewController: UIViewController {
             let trackers = category.trackers.filter { tracker in
                 let textCondition = filterText.isEmpty ||
                 tracker.name.lowercased().contains(filterText)
-                print(tracker.comletedDays)
                 
                 let dayCondition = tracker.schedule.contains { weekDay in
                     weekDay.shortTitle == day
