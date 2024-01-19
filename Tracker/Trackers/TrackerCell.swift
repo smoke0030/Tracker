@@ -59,6 +59,7 @@ final class TrackerCell: UICollectionViewCell {
     private let countLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .left
         return label
     }()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectTrackerTypeController: UIViewController {
+final class SelectTrackerTypeController: UIViewController {
     
     weak var habitCreateViewControllerDelegate: HabitCreateViewControllerDelegate?
     weak var irregularViewControllerDelegate: IrregularEventViewControllerDelegate?

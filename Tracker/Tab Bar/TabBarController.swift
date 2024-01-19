@@ -17,8 +17,6 @@ class TabBarController: UITabBarController {
     
     private func setupTabBar() {
         
-        
-       
         let vc = UINavigationController(rootViewController: TrackerViewController())
         
         vc.tabBarItem.title = "Трекеры"

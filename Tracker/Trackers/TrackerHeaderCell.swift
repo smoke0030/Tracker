@@ -16,9 +16,10 @@ class TrackerHeaderCell: UICollectionReusableView {
         addSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([title.topAnchor.constraint(equalTo: topAnchor),
-                                     title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28)
-                                    ])
+        NSLayoutConstraint.activate([
+            title.topAnchor.constraint(equalTo: topAnchor),
+            title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28)
+        ])
     }
     
     required init?(coder: NSCoder) {
