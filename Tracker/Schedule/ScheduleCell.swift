@@ -17,8 +17,6 @@ class ScheduleCell: UITableViewCell {
     
     weak var delegate: ScheduleCellDelegate?
     
-//    var days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-    
     private var weekDays: WeekDay?
     
     let cellDaysLabel: UILabel = {

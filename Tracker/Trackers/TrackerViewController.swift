@@ -9,6 +9,10 @@ import UIKit
 
 final class TrackerViewController: UIViewController {
     
+    
+    private var trackerStore = TrackerStore()
+    private var categoryStore = TrackerCategoryStore()
+    
     private let dateFormatter: DateFormatter = {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "dd.MM.yy"
@@ -67,17 +71,7 @@ final class TrackerViewController: UIViewController {
         return textField
     }()
     
-    private var categories: [TrackerCategory] = [TrackerCategory(title: "Домашние дела", trackers: [
-        Tracker(id: UUID(), name: "Поливать растения", color: .blue, emoji: "🌼", schedule: [WeekDay.monday, WeekDay.saturday], comletedDays: 0),
-        Tracker(id: UUID(), name: "Покушать", color: .blue, emoji: "🌼", schedule: [WeekDay.friday, WeekDay.wednesday], comletedDays: 0),
-        Tracker(id: UUID(), name: "Почесать кошку", color: .orange, emoji: "🌚", schedule: [WeekDay.thursday, WeekDay.saturday], comletedDays: 0),
-    ]),
-                                                 TrackerCategory(title: "Важное", trackers: [
-                                                    Tracker(id: UUID(), name: "Погулять", color: .orange, emoji: "🌚", schedule: [WeekDay.thursday, WeekDay.saturday], comletedDays: 0),
-                                                    Tracker(id: UUID(), name: "Поучиться", color: .gray, emoji: "🌚", schedule: [WeekDay.thursday, WeekDay.saturday], comletedDays: 0),
-                                                    Tracker(id: UUID(), name: "Поиграть", color: .green, emoji: "🌚", schedule: [WeekDay.thursday, WeekDay.saturday], comletedDays: 0),
-                                                 ])
-    ]
+    private var categories: [TrackerCategory] = []
     
     private var visibleCategories: [TrackerCategory] = []
     
@@ -96,12 +90,17 @@ final class TrackerViewController: UIViewController {
         setupNavBar()
         datePicker.date = currentDate
         reloadVisibleCategories()
-        
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        view.addGestureRecognizer(tapGesture)
-        
+        createGesture()
         setupEmptyViews()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let testData = TrackerCategoryStore.shared.fetchCoreDataCategory()
+        let testObjects = TrackerCategoryStore.shared.convertToCategory(testData)
+        categories = testObjects
+        reloadVisibleCategories()
     }
     
     private func setupEmptyViews() {
@@ -199,13 +198,8 @@ final class TrackerViewController: UIViewController {
                     weekDay.shortTitle == day
                 }
                 
-                
                 return textCondition && dayCondition
-                
-                
             }
-            
-            
             if trackers.isEmpty {
                 return nil
             }
@@ -329,6 +323,7 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
                                                   verticalFittingPriority: .fittingSizeLevel)
     }
 }
+
 
 //MARK: - HabitCreateViewControllerDelegate
 

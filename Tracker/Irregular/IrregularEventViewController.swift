@@ -18,6 +18,8 @@ final class IrregularEventViewController: UIViewController {
     
     weak var irregularEventViewControllerDelegate: IrregularEventViewControllerDelegate?
     
+    private var selectedCategory: String = ""
+    
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
     
@@ -66,7 +68,8 @@ final class IrregularEventViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.accessibilityIdentifier = "colorCollectionView"
         collectionView.allowsMultipleSelection = false
-        collectionView.isScrollEnabled = false
+        collectionView.isScrollEnabled = true
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.dataSource = self
         collectionView.delegate =  self
         collectionView.register(IrregularColorCollectionCell.self, forCellWithReuseIdentifier: "IrregularColorCollectionCell")
@@ -167,7 +170,9 @@ final class IrregularEventViewController: UIViewController {
         
         let currentWeekday = getWeekdayValue()
         
-        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: currentWeekday, comletedDays: 0)
+        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: currentWeekday)
+        TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
+        TrackerStore.shared.log()
         irregularEventViewControllerDelegate?.createButtonTapped(object, category: category)
         irregularEventViewControllerDelegate?.reloadTrackersData()
         view.window?.rootViewController?.dismiss(animated: true)
@@ -294,7 +299,7 @@ extension IrregularEventViewController: UITableViewDataSource {
         
         cell.selectionStyle = .none
         cell.titleLabel.text = "Категория"
-        cell.descriptionLabel.text = "Важное"
+        cell.descriptionLabel.text = selectedCategory
         
         return cell
     }
@@ -308,6 +313,7 @@ extension IrregularEventViewController: UITableViewDelegate {
         
         if indexPath.row == 0 {
             let categoryVC = CategoryViewController()
+            categoryVC.delegate = self
             present(categoryVC, animated: true)
         }
     }
@@ -443,3 +449,13 @@ extension IrregularEventViewController: UIGestureRecognizerDelegate {
     }
 }
 
+
+
+extension IrregularEventViewController: CategoryViewControllerDelegate {
+    func didSelectCategory(category: String) {
+        selectedCategory = category
+        tableView.reloadData()
+    }
+    
+    
+}

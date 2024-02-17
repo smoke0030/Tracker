@@ -8,13 +8,18 @@
 import UIKit
 
 protocol HabitCreateViewControllerDelegate: AnyObject {
+//    func testing()
     func createButtonTap(_ tracker: Tracker, category: String)
     func reloadData()
 }
 
 final class HabitCreateViewController: UIViewController {
     
+    static let shared = HabitCreateViewController()
+    
     weak var createHabitViewControllerDelegate: HabitCreateViewControllerDelegate?
+    
+    private var selectedCategory: String = ""
     
     private var trackers: [Tracker] = []
     
@@ -163,13 +168,12 @@ final class HabitCreateViewController: UIViewController {
             return
         }
         
-        let categories = ["Важное", "Домашние дела", "Разное"]
-        
-        let category = categories.randomElement() ?? ""
         
         
-        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays, comletedDays: 0)
-        createHabitViewControllerDelegate?.createButtonTap(object, category: category)
+        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays)
+        
+        TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
+        createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
         view.window?.rootViewController?.dismiss(animated: true)
         
@@ -268,7 +272,7 @@ extension HabitCreateViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         if indexPath.row == 0 {
             cell.titleLabel.text = "Категория"
-            cell.descriptionLabel.text = "Важное"
+            cell.descriptionLabel.text = selectedCategory
         } else {
             cell.titleLabel.text = "Расписание"
             let schedule = selectedDays.isEmpty ? "" : selectedDays.map { $0.shortTitle }.joined(separator: ", ")
@@ -286,6 +290,7 @@ extension HabitCreateViewController: UITableViewDelegate {
         
         if indexPath.row == 0 {
             let categoryVC = CategoryViewController()
+            categoryVC.delegate = self
             present(categoryVC, animated: true)
         } else {
             let scheduleViewController = ScheduleViewController()
@@ -315,6 +320,17 @@ extension HabitCreateViewController: ScheduleViewControllerDelegate {
         selectedDays = days
         tableView.reloadData()
     }
+    
+}
+
+//MARK: - CategoryViewControllerDelegate
+
+extension HabitCreateViewController: CategoryViewControllerDelegate {
+    func didSelectCategory(category: String) {
+        selectedCategory = category
+        tableView.reloadData()
+    }
+    
     
 }
 
@@ -431,7 +447,6 @@ extension HabitCreateViewController: UIGestureRecognizerDelegate {
             
             return false
         }
-
         return true
     }
 }
