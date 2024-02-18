@@ -85,22 +85,31 @@ final class TrackerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        TrackerCategoryStore.shared.delegate = self
         setupViews()
         setupContraints()
         setupNavBar()
         datePicker.date = currentDate
-        reloadVisibleCategories()
+        fetchTrackers()
+        fetchRecords()
         createGesture()
         setupEmptyViews()
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        let testData = TrackerCategoryStore.shared.fetchCoreDataCategory()
-        let testObjects = TrackerCategoryStore.shared.convertToCategory(testData)
-        categories = testObjects
+    private func fetchTrackers() {
+        let coreDataCats = TrackerCategoryStore.shared.fetchCoreDataCategory()
+        let objects = TrackerCategoryStore.shared.convertToCategory(coreDataCats)
+        categories = objects
         reloadVisibleCategories()
+    }
+    
+    private func fetchRecords() {
+        let coreDataRecords = TrackerRecordStore.shared.fetchRecords()
+        let records = TrackerRecordStore.shared.convertRecord(records: coreDataRecords)
+        completedTrackers = records
+        reloadVisibleCategories()
+        
     }
     
     private func setupEmptyViews() {
@@ -379,6 +388,7 @@ extension TrackerViewController: TrackerCellDelegate {
         
         
         let trackerRecord = TrackerRecord(id: id, date: datePicker.date)
+        TrackerRecordStore.shared.addRecord(tracker: trackerRecord)
         completedTrackers.append(trackerRecord)
         
         collectionView.reloadItems(at: [indexPath])
@@ -388,9 +398,19 @@ extension TrackerViewController: TrackerCellDelegate {
         
         completedTrackers.removeAll { trackerRecord in
             let isSameDay = Calendar.current.isDate(trackerRecord.date, inSameDayAs: datePicker.date)
+            TrackerRecordStore.shared.deleteRecord(id: trackerRecord.id)
             return trackerRecord.id == id && isSameDay
         }
         
         collectionView.reloadItems(at: [indexPath])
+    }
+}
+
+extension TrackerViewController: TrackerCategoryStoreDelegate {
+    func trackerCategoryUpdate(title: String) {
+        categories.removeAll { category in
+            category.title == title
+        }
+        reloadVisibleCategories()
     }
 }

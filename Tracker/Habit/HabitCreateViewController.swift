@@ -106,6 +106,7 @@ final class HabitCreateViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Введите название трекера"
         textField.font = .systemFont(ofSize: 17, weight: .regular)
+        textField.keyboardType = .default
         return textField
     }()
     
@@ -149,12 +150,11 @@ final class HabitCreateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        textField.delegate = self
         addRandomColors()
         setupViews()
         setupConstraints()
         createGesture()
-        textField.delegate = self
     }
     
     
@@ -173,6 +173,7 @@ final class HabitCreateViewController: UIViewController {
         let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays)
         
         TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
+        TrackerStore.shared.log()
         createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
         view.window?.rootViewController?.dismiss(animated: true)
@@ -310,6 +311,11 @@ extension HabitCreateViewController: UITextFieldDelegate {
         } else {
             clearTextFieldButton.isHidden = false
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

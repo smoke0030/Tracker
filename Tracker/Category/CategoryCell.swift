@@ -69,15 +69,19 @@ final class CategoryCell: UITableViewCell {
             var maskPath = UIBezierPath(roundedRect: cell.bounds,
                                         byRoundingCorners: [],
                                         cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
-
-            if indexPath.row == 0 {
-                maskPath = UIBezierPath(roundedRect: cell.bounds,
-                                       byRoundingCorners: [.topLeft, .topRight],
-                                       cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
-            } else if indexPath.row == categories.count - 1 {
+        
+        if indexPath.row == 0 && categories.count == 1 {
+            maskPath = UIBezierPath(roundedRect: cell.bounds,
+                                    byRoundingCorners: [.bottomLeft, .bottomRight, .topRight, .topLeft],
+                                    cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+        } else if indexPath.row == categories.count - 1 {
                 maskPath = UIBezierPath(roundedRect: cell.bounds,
                                        byRoundingCorners: [.bottomLeft, .bottomRight],
                                        cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+            } else if indexPath.row  == 0 {
+                maskPath = UIBezierPath(roundedRect: cell.bounds,
+                                        byRoundingCorners: [.topRight, .topLeft],
+                                        cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
             }
 
             let maskLayer = CAShapeLayer()

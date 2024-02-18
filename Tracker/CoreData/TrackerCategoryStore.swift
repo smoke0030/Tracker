@@ -4,7 +4,7 @@ import UIKit
 import CoreData
 
 protocol TrackerCategoryStoreDelegate: AnyObject {
-    func trackerCategoryUpdate() -> Void
+    func trackerCategoryUpdate(title: String)
 }
 
 final class TrackerCategoryStore: NSObject {
@@ -119,6 +119,20 @@ final class TrackerCategoryStore: NSObject {
             newCategory.title = category.title
             appDelegate.saveContext()
         }
+    }
+    
+    func deleteCategory(with title: String) {
+        let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        request.predicate = NSPredicate(format: "title == %@", title)
+        do {
+            let object = try context.fetch(request)
+            context.delete(object[0])
+            delegate?.trackerCategoryUpdate(title: title)
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        appDelegate.saveContext()
     }
     
     //метод для отображение пути к базе

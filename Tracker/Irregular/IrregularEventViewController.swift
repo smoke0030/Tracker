@@ -165,15 +165,12 @@ final class IrregularEventViewController: UIViewController {
             return
         }
         
-        let categories = ["Важное", "Домашние дела", "Разное"]
-        let category = categories.randomElement() ?? ""
-        
         let currentWeekday = getWeekdayValue()
         
         let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: currentWeekday)
         TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         TrackerStore.shared.log()
-        irregularEventViewControllerDelegate?.createButtonTapped(object, category: category)
+        irregularEventViewControllerDelegate?.createButtonTapped(object, category: selectedCategory)
         irregularEventViewControllerDelegate?.reloadTrackersData()
         view.window?.rootViewController?.dismiss(animated: true)
         
@@ -329,6 +326,11 @@ extension IrregularEventViewController: UITextFieldDelegate {
         } else {
             clearTextFieldButton.isHidden = false
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

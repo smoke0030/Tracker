@@ -13,13 +13,9 @@ protocol CategoryViewControllerDelegate: AnyObject {
 
 final class CategoryViewController: UIViewController {
     
-    
     weak var delegate: CategoryViewControllerDelegate?
-    
     private let addCategoryVC = AddCategoryViewController()
-    
     var categories: [String] = []
-    
     private var newCategory = ""
     
     private lazy var categoryTitle: UILabel = {
@@ -56,6 +52,19 @@ final class CategoryViewController: UIViewController {
         return button
     }()
     
+    private lazy var emptyView: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    private let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 14)
+        return label
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +76,6 @@ final class CategoryViewController: UIViewController {
         super.viewWillAppear(animated)
         getCategories()
     }
-    
     
     private func setupViews() {
         view.backgroundColor = .white
@@ -88,7 +96,6 @@ final class CategoryViewController: UIViewController {
             addCategoryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             addCategoryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             addCategoryButton.heightAnchor.constraint(equalToConstant: 60)
-            
         ])
     }
     
@@ -100,16 +107,12 @@ final class CategoryViewController: UIViewController {
         }
     }
     
-    
     @objc func addCategoryButtonTapped(_ sender: UIAction) {
         let addCategoryVC = AddCategoryViewController()
         addCategoryVC.delegate = self
         present(addCategoryVC, animated: true)
     }
-    
-    
 }
-
 
 extension CategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -145,11 +148,26 @@ extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! CategoryCell
         if let text = cell.titleLabel.text {
-                delegate?.didSelectCategory(category: text)
-                cell.doneImageView.isHidden = false
-            }
+            delegate?.didSelectCategory(category: text)
+            cell.doneImageView.isHidden = false
         }
+    }
     
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let cell = tableView.cellForRow(at: indexPath) as! CategoryCell
+        return UIContextMenuConfiguration(actionProvider:  { actions in
+            return UIMenu(children: [
+                UIAction(title: "Удалить", handler: { _ in
+                    guard let text = cell.titleLabel.text else { return }
+                    TrackerCategoryStore.shared.deleteCategory(with: text)
+                    self.categories.removeAll { category in
+                        category == text
+                    }
+                    tableView.reloadData()
+                })
+            ])
+        })
+    }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -161,13 +179,10 @@ extension CategoryViewController: UITableViewDelegate {
     }
 }
 
-
 extension CategoryViewController: AddCategoryVCDelegate {
     func categoryAdded(category: String) {
         categories.append(category)
         categoryTableView.reloadData()
         
     }
-    
-    
 }
