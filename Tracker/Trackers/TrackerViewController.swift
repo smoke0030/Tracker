@@ -173,15 +173,24 @@ final class TrackerViewController: UIViewController {
     }
     
     private func configureEmptyVIew() {
-        if visibleCategories.isEmpty {
+        
+        if  categories.isEmpty && visibleCategories.isEmpty {
+            
+            emptyView.isHidden = false
+            emptyLabel.isHidden = false
+            emptyView.image = UIImage(named: "mockImage")
+            emptyView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+            emptyLabel.text = "Что будем отслеживать?"
+            
+        } else if visibleCategories.isEmpty {
             emptyView.isHidden = false
             emptyLabel.isHidden = false
             emptyView.image = UIImage(named: "notFound")
             emptyView.widthAnchor.constraint(equalToConstant: 80).isActive = true
             emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
             emptyLabel.text = "Ничего не найдено"
-            
-            
+    
         } else {
             emptyView.isHidden = true
             emptyLabel.isHidden = true
