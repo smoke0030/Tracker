@@ -86,19 +86,14 @@ final class TrackerCategoryStore: NSObject {
                 else {
                     continue
             }
-                let id = trackerID
-                let name = trackerName
-                let color = UIColorMarshalling.color(from: trackerColor) ?? UIColor()
-                let emoji = trackerEmoji
-                let schedule = trackerSchedule
-                let newSchedule = schedule.compactMap() {
+                let newSchedule = trackerSchedule.compactMap() {
                     WeekDay(rawValue: $0)
                 }
                 let newTracker = Tracker(
-                    id: id,
-                    name: name,
-                    color: color,
-                    emoji: emoji,
+                    id: trackerID,
+                    name: trackerName,
+                    color: UIColorMarshalling.color(from: trackerColor) ?? UIColor(),
+                    emoji: trackerEmoji,
                     schedule: newSchedule)
                 trackers.append(newTracker)
             }
