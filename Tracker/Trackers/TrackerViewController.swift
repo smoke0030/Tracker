@@ -9,10 +9,6 @@ import UIKit
 
 final class TrackerViewController: UIViewController {
     
-    
-    private var trackerStore = TrackerStore()
-    private var categoryStore = TrackerCategoryStore()
-    
     private let dateFormatter: DateFormatter = {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "dd.MM.yy"

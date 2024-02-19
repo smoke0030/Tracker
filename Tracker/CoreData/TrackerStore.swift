@@ -6,63 +6,73 @@ protocol TrackerStoreDelegate: AnyObject {
 }
 
 final class TrackerStore: NSObject {
-
+    
     static let shared = TrackerStore()
-
-    let colorMarshalling = UIColorMarshalling()
+    
+    private override init() {
+        super.init()
+    }
+    
     weak var delegate: TrackerStoreDelegate?
-
+    
     private var appDelegate: AppDelegate {
         UIApplication.shared.delegate as! AppDelegate
     }
-
+    
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
         let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-
+        
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController.delegate = self
-
+        
         do {
             try fetchedResultsController.performFetch()
         } catch {
             print("Error fetching results: \(error)")
         }
-
+        
         return fetchedResultsController
     }()
-
+    
     private var context: NSManagedObjectContext {
         appDelegate.persistentContainer.viewContext
     }
-
+    
     func convertToTracker(coreDataTracker: TrackerCoreData) -> Tracker {
-        let id = coreDataTracker.id!
-        let name = coreDataTracker.name!
-        let color = colorMarshalling.color(from: coreDataTracker.color!)!
-        let emoji = coreDataTracker.emoji!
-        let schedule = coreDataTracker.schedule!
+        
+
+       guard let id = coreDataTracker.id,
+        let name = coreDataTracker.name,
+        let color = coreDataTracker.color,
+        let emoji = coreDataTracker.emoji,
+        let schedule = coreDataTracker.schedule
+        else {
+           assertionFailure("Failed convert to Tracker")
+           return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: [])
+       }
+        let newColor = UIColorMarshalling.color(from: color) ?? UIColor()
         let scheduleString = schedule.compactMap {
             WeekDay(rawValue: $0)
         }
-        let tracker = Tracker(id: id, name: name, color: color, emoji: emoji, schedule: scheduleString)
+        let tracker = Tracker(id: id, name: name, color: newColor, emoji: emoji, schedule: scheduleString)
         return tracker
     }
-
+    
     func addTracker(tracker: Tracker, category: TrackerCategory) {
         let newTracker = TrackerCoreData(context: context)
-
+        
         newTracker.id = tracker.id
         newTracker.name = tracker.name
         newTracker.emoji = tracker.emoji
-        newTracker.color = colorMarshalling.hexString(from: tracker.color)
+        newTracker.color = UIColorMarshalling.hexString(from: tracker.color)
         newTracker.schedule = tracker.schedule.compactMap {
             $0.rawValue
         }
-
+        
         let fetchedCategory = TrackerCategoryStore.shared.fetchCategoryWithTitle(title: category.title)
         newTracker.category = fetchedCategory
-
+        
         appDelegate.saveContext()
     }
     
@@ -81,7 +91,7 @@ final class TrackerStore: NSObject {
         appDelegate.saveContext()
         
     }
-
+    
     func fetchTrackers() {
         do {
             try fetchedResultsController.performFetch()
@@ -92,7 +102,7 @@ final class TrackerStore: NSObject {
             print("Error fetching results: \(error)")
         }
     }
-
+    
     public func log() {
         if let url = appDelegate.persistentContainer.persistentStoreCoordinator.persistentStores.first?.url {
             print(url)

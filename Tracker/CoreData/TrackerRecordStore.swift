@@ -6,9 +6,13 @@ protocol TrackerRecordStoreDelegate: AnyObject {
     func didUpdateRecord()
 }
 
-final class TrackerRecordStore {
+final class TrackerRecordStore: NSObject {
     
     static let shared = TrackerRecordStore()
+    
+    private override init(){
+        super.init()
+    }
     
     weak var delegate: TrackerRecordStoreDelegate?
     

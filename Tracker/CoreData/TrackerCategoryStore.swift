@@ -11,6 +11,10 @@ final class TrackerCategoryStore: NSObject {
     
     static let shared = TrackerCategoryStore()
     
+    private override init() {
+        super.init()
+    }
+    
     weak var delegate: TrackerCategoryStoreDelegate?
     
     private let colorMarshalling = UIColorMarshalling()
@@ -49,7 +53,8 @@ final class TrackerCategoryStore: NSObject {
             print(error.localizedDescription)
         }
         guard let firstCat = category.first else {
-            fatalError("fatal error")
+            assertionFailure("No category")
+            return nil
         }
         if category.count > 0 {
             return firstCat
@@ -68,14 +73,24 @@ final class TrackerCategoryStore: NSObject {
             let allTrackers = category.trackers?.allObjects as? [TrackerCoreData]
             var trackers: [Tracker] = []
             guard let allTrackers = allTrackers else {
-                fatalError("error")
+                assertionFailure("no Trackers")
+                return [TrackerCategory(title: "", trackers: [])]
             }
+            
             for tracker in allTrackers {
-                let id = tracker.id!
-                let name = tracker.name!
-                let color = colorMarshalling.color(from: tracker.color!)!
-                let emoji = tracker.emoji!
-                let schedule = tracker.schedule!
+                guard let trackerID = tracker.id,
+                      let trackerName = tracker.name,
+                      let trackerColor = tracker.color,
+                      let trackerEmoji = tracker.emoji,
+                      let trackerSchedule = tracker.schedule
+                else {
+                    continue
+            }
+                let id = trackerID
+                let name = trackerName
+                let color = UIColorMarshalling.color(from: trackerColor) ?? UIColor()
+                let emoji = trackerEmoji
+                let schedule = trackerSchedule
                 let newSchedule = schedule.compactMap() {
                     WeekDay(rawValue: $0)
                 }

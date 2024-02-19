@@ -16,7 +16,7 @@ final class CategoryCell: UITableViewCell {
         return view
     }()
     
-    let doneImageView: UIImageView = {
+    lazy var doneImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "checkmark")
@@ -24,7 +24,7 @@ final class CategoryCell: UITableViewCell {
         return imageView
     }()
     
-    var titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 17, weight: .regular)

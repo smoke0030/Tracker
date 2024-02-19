@@ -53,7 +53,7 @@ final class AddCategoryViewController: UIViewController {
         return view
     }()
     
-    private var textField: UITextField = {
+    private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Введите название категории"

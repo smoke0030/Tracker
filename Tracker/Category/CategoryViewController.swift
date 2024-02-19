@@ -59,10 +59,13 @@ final class CategoryViewController: UIViewController {
         return view
     }()
     
-    private let emptyLabel: UILabel = {
+    private lazy var emptyLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
     
@@ -99,12 +102,38 @@ final class CategoryViewController: UIViewController {
         ])
     }
     
+    private func updateEmptyView() {
+        
+        if categories.isEmpty {
+            [emptyView, emptyLabel].forEach {
+                view.addSubview($0)
+            }
+            NSLayoutConstraint.activate([
+                emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                emptyLabel.topAnchor.constraint(equalTo: emptyView.bottomAnchor, constant: 8),
+                
+            ])
+            
+            emptyView.isHidden = false
+            emptyLabel.isHidden = false
+            emptyView.image = UIImage(named: "mockImage")
+            emptyLabel.text = "Привычки и события можно \nобъединить по смыслу"
+        } else {
+            emptyView.isHidden = true
+            emptyLabel.isHidden = true
+            
+        }
+    }
+    
     private func getCategories() {
         let dataObjects = TrackerCategoryStore.shared.fetchCoreDataCategory()
         let fetchedCats = TrackerCategoryStore.shared.convertToCategory(dataObjects)
         for cat in fetchedCats {
             categories.append(cat.title)
         }
+        updateEmptyView()
     }
     
     @objc func addCategoryButtonTapped(_ sender: UIAction) {
@@ -150,6 +179,7 @@ extension CategoryViewController: UITableViewDelegate {
         if let text = cell.titleLabel.text {
             delegate?.didSelectCategory(category: text)
             cell.doneImageView.isHidden = false
+            dismiss(animated: true)
         }
     }
     
@@ -163,6 +193,7 @@ extension CategoryViewController: UITableViewDelegate {
                     self.categories.removeAll { category in
                         category == text
                     }
+                    self.updateEmptyView()
                     tableView.reloadData()
                 })
             ])
@@ -182,6 +213,7 @@ extension CategoryViewController: UITableViewDelegate {
 extension CategoryViewController: AddCategoryVCDelegate {
     func categoryAdded(category: String) {
         categories.append(category)
+        updateEmptyView()
         categoryTableView.reloadData()
         
     }
