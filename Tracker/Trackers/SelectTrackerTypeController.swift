@@ -26,7 +26,7 @@ final class SelectTrackerTypeController: UIViewController {
         return title
     }()
     
-    let habitButton: UIButton = {
+    private lazy var habitButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(habitButoonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +37,7 @@ final class SelectTrackerTypeController: UIViewController {
         return button
     }()
     
-    let irregularEventButton: UIButton = {
+    private lazy var irregularEventButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(irregularEventButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
