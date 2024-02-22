@@ -353,14 +353,6 @@ extension HabitCreateViewController: UITableViewDelegate {
 
 extension HabitCreateViewController: UITextFieldDelegate {
     
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        if let text = textField.text, text.isEmpty {
-//            clearTextFieldButton.isHidden = true
-//        } else {
-//            clearTextFieldButton.isHidden = false
-//        }
-//    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
