@@ -11,7 +11,7 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    
+    let isFirstLaunch = UserDefaults.standard.bool(forKey: "isFirstLaunch")
     
     var window: UIWindow?
 

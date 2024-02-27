@@ -180,14 +180,13 @@ final class HabitCreateViewController: UIViewController {
         }
         
         
-        
         let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays)
         
         TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         TrackerStore.shared.log()
         createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
-        view.window?.rootViewController?.dismiss(animated: true)
+        dismiss()
         
     }
     
@@ -199,6 +198,10 @@ final class HabitCreateViewController: UIViewController {
     
     @objc private func hideKeyboard() {
         textField.resignFirstResponder()
+    }
+    
+    private func dismiss() {
+        view.window?.rootViewController?.dismiss(animated: true)
     }
     
     private func updateCreateButtonState() {

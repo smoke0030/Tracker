@@ -81,6 +81,7 @@ final class TrackerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        setRootVc()
         TrackerCategoryStore.shared.delegate = self
         setupViews()
         setupContraints()
@@ -91,6 +92,7 @@ final class TrackerViewController: UIViewController {
         createGesture()
         setupEmptyViews()
         
+        
     }
     
     private func fetchTrackers() {
@@ -98,6 +100,14 @@ final class TrackerViewController: UIViewController {
         let objects = TrackerCategoryStore.shared.convertToCategory(coreDataCats)
         categories = objects
         reloadVisibleCategories()
+    }
+    
+    private func setRootVc() {
+        let isFirstLaunch = (UIApplication.shared.delegate as! AppDelegate).isFirstLaunch
+        if isFirstLaunch == false {
+            view.window?.rootViewController = TabBarController()
+        }
+        
     }
     
     private func fetchRecords() {
