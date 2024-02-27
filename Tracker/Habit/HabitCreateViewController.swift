@@ -8,7 +8,6 @@
 import UIKit
 
 protocol HabitCreateViewControllerDelegate: AnyObject {
-//    func testing()
     func createButtonTap(_ tracker: Tracker, category: String)
     func reloadData()
 }
@@ -154,7 +153,6 @@ final class HabitCreateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textField.delegate = self
-//        addRandomColors()
         setupViews()
         setupConstraints()
         createGesture()
@@ -374,6 +372,11 @@ extension HabitCreateViewController: ScheduleViewControllerDelegate {
 extension HabitCreateViewController: CategoryViewControllerDelegate {
     func didSelectCategory(category: String) {
         didSelectCategory(category)
+        tableView.reloadData()
+    }
+    
+    func categoryRemoved() {
+        selectedCategory = ""
         tableView.reloadData()
     }
     

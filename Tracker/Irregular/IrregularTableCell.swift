@@ -57,7 +57,9 @@ final class IrregularTableCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if descriptionLabel.text?.isEmpty ?? true {
+        guard let descriptionText = descriptionLabel.text else { return }
+        
+        if descriptionText.isEmpty || descriptionText == "" {
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
             descriptionLabel.isHidden = true
         } else {
@@ -68,5 +70,12 @@ final class IrregularTableCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func set(selectedCategory: String, indexPath: IndexPath) {
+        self.selectionStyle = .none
+        titleLabel.text = "Категория"
+        descriptionLabel.text = selectedCategory
     }
 }

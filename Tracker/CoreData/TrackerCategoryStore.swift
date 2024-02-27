@@ -29,6 +29,10 @@ final class TrackerCategoryStore: NSObject {
     
     //получение категорий из базы
     
+    func fetchCategories() -> [TrackerCategory] {
+        return convertToCategory(fetchCoreDataCategory())
+    }
+    
     func fetchCoreDataCategory() -> [TrackerCategoryCoreData] {
         var categories: [TrackerCategoryCoreData] = []
         let request = TrackerCategoryCoreData.fetchRequest()

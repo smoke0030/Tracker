@@ -94,18 +94,7 @@ final class OnboardingViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataSource = self
-        delegate = self
-        
-        if let first = pages.first {
-            setViewControllers([first], direction: .forward, animated: true, completion: nil)
-            
-        }
-        
-        if !isFirstLaunch {
-            UserDefaults.standard.setValue(true, forKey: "isFirstLaunch")
-        }
-        
+        setup()
         setupViews()
         setupContraints()
     }
@@ -132,10 +121,21 @@ final class OnboardingViewController: UIPageViewController {
             redVCLabel.leadingAnchor.constraint(equalTo: redController.view.leadingAnchor, constant: 16),
             redVCLabel.trailingAnchor.constraint(equalTo: redController.view.trailingAnchor, constant: -16),
             redVCLabel.centerYAnchor.constraint(equalTo: redController.view.centerYAnchor),
-            
-            
-            
         ])
+    }
+    
+    private func setup() {
+        dataSource = self
+        delegate = self
+        
+        if let first = pages.first {
+            setViewControllers([first], direction: .forward, animated: true, completion: nil)
+            
+        }
+        
+        if !isFirstLaunch {
+            UserDefaults.standard.setValue(true, forKey: "isFirstLaunch")
+        }
     }
     
     private func setupViews() {
