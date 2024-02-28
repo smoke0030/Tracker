@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CategoryViewModel {
+class CategoryViewModel{
     
     private(set) var categories: [String] = []  {
         didSet {

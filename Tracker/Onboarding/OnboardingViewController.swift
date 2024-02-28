@@ -151,9 +151,7 @@ final class OnboardingViewController: UIPageViewController {
     }
     
     @objc private func buttonDidTapped() {
-        let vc = TabBarController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
+       
         view.window?.rootViewController = TabBarController()
     }
 }

@@ -211,6 +211,5 @@ extension CategoryViewController: UITableViewDelegate {
 extension CategoryViewController: AddCategoryVCDelegate {
     func categoryAdded(category: String) {
         categoryViewModel.updateCategory(category: category)
-        
     }
 }
