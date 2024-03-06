@@ -19,11 +19,11 @@ class TabBarController: UITabBarController {
         
         let vc = UINavigationController(rootViewController: TrackerViewController())
         
-        vc.tabBarItem.title = "Трекеры"
+        vc.tabBarItem.title = NSLocalizedString("tabBarTrackers", comment: "")
         vc.tabBarItem.image = UIImage(named: "trackerImage")
         
         let statisticVC = setupVC(vc: StatisticViewController(),
-                                  title: "Стастистика",
+                                  title: NSLocalizedString("tabBarStatistic", comment: ""),
                                   image: UIImage(named: "statisticImage"))
         viewControllers = [vc, statisticVC]
     }

@@ -75,7 +75,7 @@ final class IrregularTableCell: UITableViewCell {
     
     func set(selectedCategory: String, indexPath: IndexPath) {
         self.selectionStyle = .none
-        titleLabel.text = "Категория"
+        titleLabel.text = NSLocalizedString("tableCategoryTitle", comment: "")
         descriptionLabel.text = selectedCategory
     }
 }

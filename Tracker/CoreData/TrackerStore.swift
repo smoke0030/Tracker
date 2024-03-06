@@ -47,15 +47,17 @@ final class TrackerStore: NSObject {
         let color = coreDataTracker.color,
         let emoji = coreDataTracker.emoji,
         let schedule = coreDataTracker.schedule
+                
         else {
            assertionFailure("Failed convert to Tracker")
-           return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: [])
+           return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: [], isPinned: false)
        }
+        let isPinned = coreDataTracker.isPinned
         let newColor = UIColorMarshalling.color(from: color) ?? UIColor()
         let scheduleString = schedule.compactMap {
             WeekDay(rawValue: $0)
         }
-        let tracker = Tracker(id: id, name: name, color: newColor, emoji: emoji, schedule: scheduleString)
+        let tracker = Tracker(id: id, name: name, color: newColor, emoji: emoji, schedule: scheduleString, isPinned: false)
         return tracker
     }
     
@@ -69,6 +71,7 @@ final class TrackerStore: NSObject {
         newTracker.schedule = tracker.schedule.compactMap {
             $0.rawValue
         }
+        newTracker.isPinned = tracker.isPinned
         
         let fetchedCategory = TrackerCategoryStore.shared.fetchCategoryWithTitle(title: category.title)
         newTracker.category = fetchedCategory

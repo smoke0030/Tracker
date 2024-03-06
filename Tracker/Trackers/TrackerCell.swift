@@ -10,6 +10,8 @@ import UIKit
 protocol TrackerCellDelegate: AnyObject {
     func comletedTracker(id: UUID, indexPath: IndexPath)
     func uncomletedTracker(id: UUID, indexPath: IndexPath)
+    func trackerWasDeleted()
+    
 }
 
 final class TrackerCell: UICollectionViewCell {
@@ -21,10 +23,10 @@ final class TrackerCell: UICollectionViewCell {
     
     weak var delegate: TrackerCellDelegate?
     
-   
+    
     private var emoji = UILabel()
     
-    private let label: UILabel = {
+    let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 12, weight: .medium)
@@ -40,14 +42,14 @@ final class TrackerCell: UICollectionViewCell {
         
     }()
     
-    private let trackerView : UIView = {
+    let trackerView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
     }()
     
-     lazy var plusButton: UIButton = {
+    lazy var plusButton: UIButton = {
         let button = UIButton()
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -80,12 +82,19 @@ final class TrackerCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        setInteraction()
         setupViews()
         setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    private func setInteraction() {
+        let interaction = UIContextMenuInteraction(delegate: self)
+        trackerView.addInteraction(interaction)
     }
     
     private func setupViews() {
@@ -129,11 +138,12 @@ final class TrackerCell: UICollectionViewCell {
             emojiView.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
-    func set(object: Tracker, 
+    
+    func set(object: Tracker,
              isComleted: Bool,
              completedDays: Int,
              indexPath: IndexPath
-        ) {
+    ) {
         
         lazy var paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.26
@@ -152,8 +162,8 @@ final class TrackerCell: UICollectionViewCell {
         }
         self.trackerView.layer.cornerRadius = 16
         
-        let wordDay = convertCompletedDays(completedDays)
-        countLabel.text = "\(wordDay)"
+        let selectedWordDay = getCompletedCount(count: completedDays)
+        countLabel.text = "\(selectedWordDay)"
         
         self.label.attributedText = NSMutableAttributedString(string: object.name, attributes: [NSAttributedString.Key.paragraphStyle : paragraphStyle])
         self.label.textColor  = .white
@@ -168,20 +178,43 @@ final class TrackerCell: UICollectionViewCell {
         self.layer.cornerRadius = 16
     }
     
-    private func convertCompletedDays(_ completedDays: Int) -> String {
-        let number = completedDays % 10
-        let lastTwoNumbers = completedDays % 100
-        if lastTwoNumbers >= 11 && lastTwoNumbers <= 19 {
-            return "\(completedDays) дней"
-        }
+    func getCompletedCount(count: Int) -> String {
+        let formatString: String = NSLocalizedString("completedDaysCount", comment: "")
+        let resultString: String = String.localizedStringWithFormat(formatString, count)
+        return resultString
+    }
+    
+    func deleteTrac(with name: String) {
+        TrackerStore.shared.deleteTracker(with: name)
+        
+    }
+}
 
-        switch number {
-        case 1:
-            return "\(completedDays) день"
-        case 2, 3, 4:
-            return "\(completedDays) дня"
-        default:
-            return "\(completedDays) дней"
+extension TrackerCell: UIContextMenuInteractionDelegate {
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            let secureAction = UIAction(title: "Закрепить") { action in
+                
+            }
+            
+            let editAction = UIAction(title: "Редактировать") { action in
+                
+            }
+            
+            let deleteAction = UIAction(title: "Удалить", attributes: .destructive ) { _ in
+                guard let name = self.label.text else {
+                    return
+                }
+                
+                TrackerStore.shared.deleteTracker(with: name)
+
+                self.delegate?.trackerWasDeleted()
+            }
+            
+            return UIMenu(title: "", children: [secureAction, editAction, deleteAction])
         }
+        
+        return configuration
     }
 }

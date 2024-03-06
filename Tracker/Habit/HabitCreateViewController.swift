@@ -16,6 +16,12 @@ final class HabitCreateViewController: UIViewController {
     
     weak var createHabitViewControllerDelegate: HabitCreateViewControllerDelegate?
     
+    private var dateFormatter: DateFormatter = {
+      let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        return formatter
+    }()
+    
     private var selectedCategory: String = ""
     
     private var trackers: [Tracker] = []
@@ -36,7 +42,7 @@ final class HabitCreateViewController: UIViewController {
     private var habitTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Новая привычка"
+        label.text = NSLocalizedString("habitTitle", comment: "")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -105,7 +111,7 @@ final class HabitCreateViewController: UIViewController {
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("habitTextFieldPlaceholder", comment: "")
         textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.keyboardType = .default
         textField.addTarget(self, action: #selector(didChangeTF), for: .editingChanged)
@@ -114,7 +120,8 @@ final class HabitCreateViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         var button = UIButton()
-        button.setTitle("Отменить", for: .normal)
+        let title = NSLocalizedString("habitCancelButton", comment: "")
+        button.setTitle(title, for: .normal)
         button.setTitleColor(.ypRed, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +136,8 @@ final class HabitCreateViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        button.setTitle("Создать", for: .normal)
+        let title = NSLocalizedString("habitCreateButton", comment: "")
+        button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.backgroundColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
@@ -180,7 +188,7 @@ final class HabitCreateViewController: UIViewController {
         }
         
         
-        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays)
+        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays, isPinned: false)
         
         TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         TrackerStore.shared.log()
@@ -321,12 +329,12 @@ extension HabitCreateViewController: UITableViewDataSource {
 
         cell.selectionStyle = .none
         if indexPath.row == 0 {
-            cell.titleLabel.text = "Категория"
+            cell.titleLabel.text = NSLocalizedString("tableCategoryTitle", comment: "")
             cell.descriptionLabel.text = selectedCategory
         } else {
-            cell.titleLabel.text = "Расписание"
+            cell.titleLabel.text = NSLocalizedString("scheduleTitle", comment: "")
             let schedule = selectedDays.isEmpty ? "" : selectedDays.map { $0.shortTitle }.joined(separator: ", ")
-            cell.descriptionLabel.text = schedule        
+            cell.descriptionLabel.text = schedule
         }
         return cell
     }
@@ -414,11 +422,11 @@ extension HabitCreateViewController: UICollectionViewDataSource, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if collectionView.accessibilityIdentifier == "habitCollectionColorView" {
             let colorHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HabitCollectionColorHeaderCell", for: indexPath) as! HabitCollectionColorHeaderCell
-            colorHeaderCell.title.text = "Цвет"
+            colorHeaderCell.title.text = NSLocalizedString("colorHeader", comment: "")
             return colorHeaderCell
         } else if collectionView.accessibilityIdentifier == "habitCollectionEmojiView" {
             let emojiHeaderCell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HabitCollectionEmojiHeaderCell", for: indexPath) as! HabitCollectionEmojiHeaderCell
-            emojiHeaderCell.title.text = "Emoji"
+            emojiHeaderCell.title.text = NSLocalizedString("emojiHeader", comment: "")
             return emojiHeaderCell
         }
         fatalError("No cells")

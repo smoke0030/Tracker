@@ -20,7 +20,7 @@ final class SelectTrackerTypeController: UIViewController {
     
     private let titleLabel: UILabel = {
         let title = UILabel()
-        title.text = "Создание трекера"
+        title.text = NSLocalizedString("selectViewTitle", comment: "")
         title.font = .systemFont(ofSize: 16, weight: .medium)
         title.translatesAutoresizingMaskIntoConstraints = false
         return title
@@ -31,7 +31,8 @@ final class SelectTrackerTypeController: UIViewController {
         button.addTarget(self, action: #selector(habitButoonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16
-        button.setTitle("Привычка", for: .normal)
+        let title = NSLocalizedString("selectHabitTitle", comment: "")
+        button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.backgroundColor = .black
         return button
@@ -42,7 +43,8 @@ final class SelectTrackerTypeController: UIViewController {
         button.addTarget(self, action: #selector(irregularEventButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 16
-        button.setTitle("Нерегулярное событие", for: .normal)
+        let title = NSLocalizedString("selectIrregularEventTitle", comment: "")
+        button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.backgroundColor = .black
         return button

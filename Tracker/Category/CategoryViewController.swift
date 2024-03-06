@@ -21,7 +21,7 @@ final class CategoryViewController: UIViewController {
     private lazy var categoryTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Категории"
+        label.text = NSLocalizedString("categotyTitle", comment: "")
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }()
@@ -44,7 +44,8 @@ final class CategoryViewController: UIViewController {
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Добавить категорию", for: .normal)
+        let title = NSLocalizedString("categoryCreateButton", comment: "")
+        button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(addCategoryButtonTapped(_ :)), for: .touchUpInside)
         button.backgroundColor = .black
@@ -131,7 +132,7 @@ final class CategoryViewController: UIViewController {
             emptyView.isHidden = false
             emptyLabel.isHidden = false
             emptyView.image = UIImage(named: "mockImage")
-            emptyLabel.text = "Привычки и события можно \nобъединить по смыслу"
+            emptyLabel.text = NSLocalizedString("categoriesEmptyLabel", comment: "")
         } else {
             emptyView.isHidden = true
             emptyLabel.isHidden = true

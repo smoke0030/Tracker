@@ -28,7 +28,7 @@ final class TrackerViewController: UIViewController {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("trackerTitle", comment: "")
         label.font = .systemFont(ofSize: 34, weight: .bold)
         return label
     }()
@@ -52,17 +52,25 @@ final class TrackerViewController: UIViewController {
             datePicker.preferredDatePickerStyle = .compact
             datePicker.datePickerMode = .date
             datePicker.tintColor = .ypBlue
-            datePicker.locale = Locale(identifier: "ru_RU")
+            datePicker.locale = Locale.current
             datePicker.calendar.firstWeekday = 2
             datePicker.clipsToBounds = true
             datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
             return datePicker
         }()
     
+    
+//    private let searchController: UISearchController = {
+//       let controller = UISearchController(searchResultsController: nil)
+//        controller.obscuresBackgroundDuringPresentation = false
+//        controller.searchBar.placeholder = NSLocalizedString("searchPlaceholder", comment: "")
+//        return controller
+//    }()
+    
     private lazy var searchTextField: UISearchTextField = {
         let textField = UISearchTextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Поиск"
+        textField.placeholder = NSLocalizedString("searchPlaceholder", comment: "")
         textField.delegate = self
         return textField
     }()
@@ -81,7 +89,6 @@ final class TrackerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setRootVc()
         TrackerCategoryStore.shared.delegate = self
         setupViews()
         setupContraints()
@@ -91,7 +98,8 @@ final class TrackerViewController: UIViewController {
         fetchRecords()
         createGesture()
         setupEmptyViews()
-        
+//        navigationItem.searchController = searchController
+//        searchController.searchResultsUpdater = self
         
     }
     
@@ -100,14 +108,6 @@ final class TrackerViewController: UIViewController {
         let objects = TrackerCategoryStore.shared.convertToCategory(coreDataCats)
         categories = objects
         reloadVisibleCategories()
-    }
-    
-    private func setRootVc() {
-        let isFirstLaunch = (UIApplication.shared.delegate as! AppDelegate).isFirstLaunch
-        if isFirstLaunch == false {
-            view.window?.rootViewController = TabBarController()
-        }
-        
     }
     
     private func fetchRecords() {
@@ -134,7 +134,7 @@ final class TrackerViewController: UIViewController {
             emptyView.isHidden = false
             emptyLabel.isHidden = false
             emptyView.image = UIImage(named: "mockImage")
-            emptyLabel.text = "Что будем отслеживать?"
+            emptyLabel.text = NSLocalizedString("trackersEmptyViewlabel", comment: "")
         }
     }
     
@@ -163,7 +163,7 @@ final class TrackerViewController: UIViewController {
         [collectionView, searchTextField, titleLabel].forEach {
             view.addSubview($0)
         }
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.systemBackground
     }
     
     private func setupNavBar() {
@@ -187,7 +187,7 @@ final class TrackerViewController: UIViewController {
             emptyView.image = UIImage(named: "mockImage")
             emptyView.widthAnchor.constraint(equalToConstant: 80).isActive = true
             emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-            emptyLabel.text = "Что будем отслеживать?"
+            emptyLabel.text = NSLocalizedString("trackersEmptyViewlabel", comment: "")
             
         } else if visibleCategories.isEmpty {
             emptyView.isHidden = false
@@ -195,7 +195,7 @@ final class TrackerViewController: UIViewController {
             emptyView.image = UIImage(named: "notFound")
             emptyView.widthAnchor.constraint(equalToConstant: 80).isActive = true
             emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-            emptyLabel.text = "Ничего не найдено"
+            emptyLabel.text = NSLocalizedString("notFoundEmptyViewLabel", comment: "")
     
         } else {
             emptyView.isHidden = true
@@ -206,10 +206,11 @@ final class TrackerViewController: UIViewController {
     private func reloadVisibleCategories() {
         let selectedDate = datePicker.date
         let calendar = Calendar.current
-        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.locale = Locale.current
         let weekDaySymbols  = dateFormatter.shortWeekdaySymbols
         let filterWeekDay = calendar.component(.weekday, from: selectedDate)
         let filterText = (searchTextField.text ?? "").lowercased()
+//        let searchText = (searchController.searchBar.text ?? "" ).lowercased()
         let weekDayName = weekDaySymbols?[filterWeekDay - 1]
         guard let day = weekDayName else { return }
         visibleCategories = categories.compactMap { category in
@@ -224,9 +225,11 @@ final class TrackerViewController: UIViewController {
                 
                 return textCondition && dayCondition
             }
+        
             if trackers.isEmpty {
                 return nil
             }
+            print(visibleCategories)
             return TrackerCategory(title: category.title,
                                    trackers: trackers)
         }
@@ -286,6 +289,7 @@ extension TrackerViewController: UITextFieldDelegate {
 //MARK: - UICollectionViewDataSource
 
 extension TrackerViewController: UICollectionViewDataSource {
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         visibleCategories.count
     }
@@ -324,6 +328,7 @@ extension TrackerViewController: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegateFlowLayout
 
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: (collectionView.bounds.width - 45) / 2, height: 140)
     }
@@ -399,8 +404,13 @@ extension TrackerViewController: IrregularEventViewControllerDelegate {
 //MARK: - TrackerCellDelegate
 
 extension TrackerViewController: TrackerCellDelegate {
+    
+    func trackerWasDeleted() {
+        fetchTrackers()
+        reloadVisibleCategories()
+    }
+    
     func comletedTracker(id: UUID, indexPath: IndexPath) {
-        
         
         let trackerRecord = TrackerRecord(id: id, date: datePicker.date)
         TrackerRecordStore.shared.addRecord(tracker: trackerRecord)
@@ -429,3 +439,14 @@ extension TrackerViewController: TrackerCategoryStoreDelegate {
         reloadVisibleCategories()
     }
 }
+
+//extension TrackerViewController: UISearchResultsUpdating {
+//    func updateSearchResults(for searchController: UISearchController) {
+//        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+//            reloadVisibleCategories()
+//            
+//        }
+//    }
+//    
+//    
+//}
