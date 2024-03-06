@@ -64,7 +64,6 @@ final class AddCategoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupViews()
         setupConstraints()
         createGesture()
@@ -132,6 +131,7 @@ final class AddCategoryViewController: UIViewController {
         addCategoryToDB()
         delegate?.categoryAdded(category: text)
         dismiss(animated: true)
+        
     }
     
     @objc func clearTextFieldButtonTapped() {

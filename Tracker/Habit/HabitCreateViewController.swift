@@ -8,7 +8,6 @@
 import UIKit
 
 protocol HabitCreateViewControllerDelegate: AnyObject {
-//    func testing()
     func createButtonTap(_ tracker: Tracker, category: String)
     func reloadData()
 }
@@ -154,7 +153,6 @@ final class HabitCreateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textField.delegate = self
-//        addRandomColors()
         setupViews()
         setupConstraints()
         createGesture()
@@ -182,14 +180,13 @@ final class HabitCreateViewController: UIViewController {
         }
         
         
-        
         let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays)
         
         TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         TrackerStore.shared.log()
         createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
-        view.window?.rootViewController?.dismiss(animated: true)
+        dismiss()
         
     }
     
@@ -201,6 +198,10 @@ final class HabitCreateViewController: UIViewController {
     
     @objc private func hideKeyboard() {
         textField.resignFirstResponder()
+    }
+    
+    private func dismiss() {
+        view.window?.rootViewController?.dismiss(animated: true)
     }
     
     private func updateCreateButtonState() {
@@ -353,14 +354,6 @@ extension HabitCreateViewController: UITableViewDelegate {
 
 extension HabitCreateViewController: UITextFieldDelegate {
     
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        if let text = textField.text, text.isEmpty {
-//            clearTextFieldButton.isHidden = true
-//        } else {
-//            clearTextFieldButton.isHidden = false
-//        }
-//    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -382,6 +375,11 @@ extension HabitCreateViewController: ScheduleViewControllerDelegate {
 extension HabitCreateViewController: CategoryViewControllerDelegate {
     func didSelectCategory(category: String) {
         didSelectCategory(category)
+        tableView.reloadData()
+    }
+    
+    func categoryRemoved() {
+        selectedCategory = ""
         tableView.reloadData()
     }
     
