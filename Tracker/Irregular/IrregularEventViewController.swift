@@ -67,12 +67,24 @@ final class IrregularEventViewController: UIViewController {
         return tableView
     }()
     
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    private let scrollContent: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var colorCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.accessibilityIdentifier = "colorCollectionView"
         collectionView.allowsMultipleSelection = false
-        collectionView.isScrollEnabled = true
+        collectionView.isScrollEnabled = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.dataSource = self
         collectionView.delegate =  self
@@ -154,7 +166,6 @@ final class IrregularEventViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        addRandomColors()
         setupViews()
         setupConstraints()
         createGesture()
@@ -283,50 +294,65 @@ final class IrregularEventViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            habitTitleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
-            habitTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            habitTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            textFieldView.topAnchor.constraint(equalTo: habitTitleLabel.bottomAnchor, constant: 30),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -20),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            habitTitleLabel.topAnchor.constraint(equalTo: scrollContent.topAnchor, constant: 30),
+            habitTitleLabel.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 16),
+            habitTitleLabel.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -16),
+            scrollContent.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollContent.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollContent.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollContent.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            textFieldView.topAnchor.constraint(equalTo: habitTitleLabel.bottomAnchor, constant: 24),
             textFieldView.heightAnchor.constraint(equalToConstant: 75),
-            textFieldView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            textFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textFieldView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 16),
+            textFieldView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -16),
             textField.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),
             textField.leadingAnchor.constraint(equalTo: textFieldView.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: clearTextFieldButton.leadingAnchor, constant: -12),
             clearTextFieldButton.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),
             clearTextFieldButton.trailingAnchor.constraint(equalTo: textFieldView.trailingAnchor, constant: -16),
-            buttonsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            buttonsStackView.widthAnchor.constraint(equalToConstant: view.bounds.width - 40),
-            buttonsStackView.heightAnchor.constraint(equalToConstant: 60),
             tableView.topAnchor.constraint(equalTo: textFieldView.bottomAnchor, constant: 24),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -16),
             tableView.heightAnchor.constraint(equalToConstant: 75),
             emojiCollectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 30),
-            emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            emojiCollectionView.heightAnchor.constraint(equalToConstant: 210),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 18),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -18),
+            emojiCollectionView.heightAnchor.constraint(equalToConstant: 205),
             colorCollectionView.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: 30),
-            colorCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            colorCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            colorCollectionView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16),
+            colorCollectionView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 18),
+            colorCollectionView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -18),
+            colorCollectionView.heightAnchor.constraint(equalToConstant: 204),
+            colorCollectionView.bottomAnchor.constraint(equalTo: scrollContent.bottomAnchor),
+            buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            buttonsStackView.heightAnchor.constraint(equalToConstant: 60),
+            buttonsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        [cancelButton, doneButton].forEach {
+            buttonsStackView.addArrangedSubview($0)
+        }
         
-        [habitTitleLabel, textFieldView, tableView, colorCollectionView, emojiCollectionView, buttonsStackView].forEach {
-            view.addSubview($0)
+        view.backgroundColor = .systemBackground
+        view.addSubview(scrollView)
+        view.addSubview(buttonsStackView)
+        
+        scrollView.addSubview(scrollContent)
+       
+        
+        [habitTitleLabel, textFieldView, tableView, colorCollectionView, emojiCollectionView].forEach {
+            scrollContent.addSubview($0)
         }
         
         [textField, clearTextFieldButton].forEach {
             textFieldView.addSubview($0)
-        }
-        
-        [cancelButton, doneButton].forEach {
-            buttonsStackView.addArrangedSubview($0)
         }
     }
 }

@@ -10,7 +10,8 @@ import UIKit
 protocol TrackerCellDelegate: AnyObject {
     func comletedTracker(id: UUID, indexPath: IndexPath)
     func uncomletedTracker(id: UUID, indexPath: IndexPath)
-    func trackerWasDeleted()
+    func trackerWasDeleted(name: String)
+    func editTracker(with id: UUID)
     
 }
 
@@ -199,7 +200,8 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
             }
             
             let editAction = UIAction(title: "Редактировать") { action in
-                
+                guard let trackerID = self.trackerID else { return }
+                self.delegate?.editTracker(with: trackerID)
             }
             
             let deleteAction = UIAction(title: "Удалить", attributes: .destructive ) { _ in
@@ -207,9 +209,8 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
                     return
                 }
                 
-                TrackerStore.shared.deleteTracker(with: name)
-
-                self.delegate?.trackerWasDeleted()
+                self.delegate?.trackerWasDeleted(name: name)
+               
             }
             
             return UIMenu(title: "", children: [secureAction, editAction, deleteAction])

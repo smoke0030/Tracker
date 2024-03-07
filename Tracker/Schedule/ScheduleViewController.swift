@@ -45,9 +45,9 @@ class ScheduleViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         let title = NSLocalizedString("done", comment: "")
         button.setTitle(title, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         button.addTarget(self, action: #selector(doneButtonTapped(_ :)), for: .touchUpInside)
-        button.backgroundColor = .black
+        button.backgroundColor = Colors.shared.buttonsBackground
         button.layer.cornerRadius = 16
         return button
     }()
@@ -60,7 +60,7 @@ class ScheduleViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(scheduleTitle)
         view.addSubview(scheduleTableView)
         view.addSubview(doneButton)
@@ -107,7 +107,7 @@ extension ScheduleViewController: UITableViewDataSource {
         cell.cellDaysLabel.text = getWeekDay(day: weekDay)
         cell.setSwitch(for: switchView, at: indexPath)
         cell.delegate = self
-        cell.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
+        cell.backgroundColor = Colors.shared.dark
         return cell
     }
     

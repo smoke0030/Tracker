@@ -79,7 +79,25 @@ final class TrackerStore: NSObject {
         appDelegate.saveContext()
     }
     
+    func editTracker(name: String, tracker: Tracker, category: TrackerCategory) {
+        let editedTracker = fetchTracker(name: name)
+        editedTracker.id = tracker.id
+        editedTracker.name = tracker.name
+        editedTracker.emoji = tracker.emoji
+        editedTracker.color = UIColorMarshalling.hexString(from: tracker.color)
+        editedTracker.schedule = tracker.schedule.compactMap {
+            $0.rawValue
+        }
+        editedTracker.isPinned = tracker.isPinned
+        
+        let fetchedCategory = TrackerCategoryStore.shared.fetchCategoryWithTitle(title: category.title)
+        editedTracker.category = fetchedCategory
+        
+        appDelegate.saveContext()
+    }
+    
     func deleteTracker(with name: String) {
+        
         let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
         request.predicate = NSPredicate(format: "name == %@", name)
         do {
@@ -93,6 +111,41 @@ final class TrackerStore: NSObject {
         
         appDelegate.saveContext()
         
+    }
+    
+    func fetchTracker(with id: UUID) -> TrackerCoreData {
+        let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        
+        let uuid = id.uuidString
+        request.predicate = NSPredicate(format: "id == %@", uuid)
+        var object: [TrackerCoreData] = []
+        
+        do {
+            object = try context.fetch(request)
+           
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        return object[0]
+    }
+    
+    func fetchTracker(name: String) -> TrackerCoreData {
+        let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        
+        request.predicate = NSPredicate(format: "name == %@", name)
+        var object: [TrackerCoreData] = []
+        
+        do {
+            object = try context.fetch(request)
+           
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        return object[0]
     }
     
     func fetchTrackers() {

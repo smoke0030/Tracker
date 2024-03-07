@@ -16,6 +16,7 @@ final class SelectTrackerTypeController: UIViewController {
         super.viewDidLoad()
         
         setupViews()
+       
     }
     
     private let titleLabel: UILabel = {
@@ -33,8 +34,10 @@ final class SelectTrackerTypeController: UIViewController {
         button.layer.cornerRadius = 16
         let title = NSLocalizedString("selectHabitTitle", comment: "")
         button.setTitle(title, for: .normal)
+        button.backgroundColor = Colors.shared.buttonsBackground
+        button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        button.backgroundColor = .black
+        
         return button
     }()
     
@@ -46,7 +49,8 @@ final class SelectTrackerTypeController: UIViewController {
         let title = NSLocalizedString("selectIrregularEventTitle", comment: "")
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        button.backgroundColor = .black
+        button.backgroundColor = Colors.shared.buttonsBackground
+        button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         return button
     }()
     
@@ -74,7 +78,7 @@ final class SelectTrackerTypeController: UIViewController {
     }
     
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(buttonsStackView)
         view.addSubview(titleLabel)
         buttonsStackView.addArrangedSubview(habitButton)

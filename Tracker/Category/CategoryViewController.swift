@@ -46,9 +46,9 @@ final class CategoryViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         let title = NSLocalizedString("categoryCreateButton", comment: "")
         button.setTitle(title, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         button.addTarget(self, action: #selector(addCategoryButtonTapped(_ :)), for: .touchUpInside)
-        button.backgroundColor = .black
+        button.backgroundColor = Colors.shared.buttonsBackground
         button.layer.cornerRadius = 16
         return button
     }()
@@ -93,7 +93,7 @@ final class CategoryViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(categoryTitle)
         view.addSubview(categoryTableView)
         view.addSubview(addCategoryButton)

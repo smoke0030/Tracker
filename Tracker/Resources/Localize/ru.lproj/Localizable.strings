@@ -48,3 +48,9 @@
 "shortSaturday" = "Сб";
 "shortWednesday" = "Ср";
 "shortSunday" = "Вс";
+"everyday" = "Ежедневно";
+"Filters" = "Фильтры";
+"All trackers" = "Все трекеры";
+"Trackers for today" =  "Трекеры на сегодня";
+"CompletedTrackers" = "Завершенные";
+"Not completed trackers" = "Не завершенные";

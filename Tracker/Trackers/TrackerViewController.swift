@@ -46,26 +46,30 @@ final class TrackerViewController: UIViewController {
         label.font = .systemFont(ofSize: 14)
         return label
     }()
-
+    
+    private lazy var filtersButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = #colorLiteral(red: 0.2156862745, green: 0.4470588235, blue: 0.9058823529, alpha: 1)
+        button.setTitle(NSLocalizedString("Filters", comment: ""), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17)
+        button.layer.cornerRadius = 16
+        button.addTarget(self, action: #selector(didTapFiltersButton), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var datePicker: UIDatePicker = {
-            let datePicker = UIDatePicker()
-            datePicker.preferredDatePickerStyle = .compact
-            datePicker.datePickerMode = .date
-            datePicker.tintColor = .ypBlue
-            datePicker.locale = Locale.current
-            datePicker.calendar.firstWeekday = 2
-            datePicker.clipsToBounds = true
-            datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
-            return datePicker
-        }()
-    
-    
-//    private let searchController: UISearchController = {
-//       let controller = UISearchController(searchResultsController: nil)
-//        controller.obscuresBackgroundDuringPresentation = false
-//        controller.searchBar.placeholder = NSLocalizedString("searchPlaceholder", comment: "")
-//        return controller
-//    }()
+        let datePicker = UIDatePicker()
+        datePicker.preferredDatePickerStyle = .compact
+        datePicker.datePickerMode = .date
+        datePicker.tintColor = .ypBlue
+        datePicker.locale = Locale.current
+        datePicker.calendar.firstWeekday = 2
+        datePicker.clipsToBounds = true
+        datePicker.layer.cornerRadius = 8
+        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        return datePicker
+    }()
     
     private lazy var searchTextField: UISearchTextField = {
         let textField = UISearchTextField()
@@ -81,7 +85,7 @@ final class TrackerViewController: UIViewController {
     
     private var completedTrackers: [TrackerRecord] = []
     
-   
+    
     
     var currentDate = Date()
     
@@ -98,8 +102,6 @@ final class TrackerViewController: UIViewController {
         fetchRecords()
         createGesture()
         setupEmptyViews()
-//        navigationItem.searchController = searchController
-//        searchController.searchResultsUpdater = self
         
     }
     
@@ -150,6 +152,11 @@ final class TrackerViewController: UIViewController {
             searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             searchTextField.heightAnchor.constraint(equalToConstant: 35),
+            filtersButton.heightAnchor.constraint(equalToConstant: 50),
+            filtersButton.widthAnchor.constraint(equalToConstant: 114),
+            filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15),
+            filtersButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            
         ])
         
     }
@@ -160,7 +167,7 @@ final class TrackerViewController: UIViewController {
     }
     
     private func setupViews() {
-        [collectionView, searchTextField, titleLabel].forEach {
+        [collectionView, searchTextField, titleLabel, filtersButton].forEach {
             view.addSubview($0)
         }
         view.backgroundColor = UIColor.systemBackground
@@ -171,12 +178,13 @@ final class TrackerViewController: UIViewController {
         navBar.shadowImage = UIImage()
         navBar.barTintColor = view.backgroundColor
         let addTaskButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
-        addTaskButton.tintColor = .black
+        addTaskButton.tintColor = Colors.shared.plusButtonColor
         navBar.topItem?.setLeftBarButton(addTaskButton, animated: false)
         let customBarItem = UIBarButtonItem(customView: datePicker)
         customBarItem.customView?.widthAnchor.constraint(equalToConstant: 120).isActive = true
         navBar.topItem?.setRightBarButton(customBarItem, animated: false)
     }
+    
     
     private func configureEmptyVIew() {
         
@@ -196,7 +204,7 @@ final class TrackerViewController: UIViewController {
             emptyView.widthAnchor.constraint(equalToConstant: 80).isActive = true
             emptyView.heightAnchor.constraint(equalToConstant: 80).isActive = true
             emptyLabel.text = NSLocalizedString("notFoundEmptyViewLabel", comment: "")
-    
+            
         } else {
             emptyView.isHidden = true
             emptyLabel.isHidden = true
@@ -210,7 +218,6 @@ final class TrackerViewController: UIViewController {
         let weekDaySymbols  = dateFormatter.shortWeekdaySymbols
         let filterWeekDay = calendar.component(.weekday, from: selectedDate)
         let filterText = (searchTextField.text ?? "").lowercased()
-//        let searchText = (searchController.searchBar.text ?? "" ).lowercased()
         let weekDayName = weekDaySymbols?[filterWeekDay - 1]
         guard let day = weekDayName else { return }
         visibleCategories = categories.compactMap { category in
@@ -225,11 +232,10 @@ final class TrackerViewController: UIViewController {
                 
                 return textCondition && dayCondition
             }
-        
+            
             if trackers.isEmpty {
                 return nil
             }
-            print(visibleCategories)
             return TrackerCategory(title: category.title,
                                    trackers: trackers)
         }
@@ -269,10 +275,24 @@ final class TrackerViewController: UIViewController {
         
     }
     
-    @objc func hideKeyboard() {
+    @objc private func hideKeyboard() {
         reloadVisibleCategories()
         searchTextField.resignFirstResponder()
     }
+    
+    @objc private func didTapFiltersButton() {
+        let vc = FiltersViewController()
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+}
+
+extension TrackerViewController: FiltersViewControllerDelegate {
+    func didSelectFilter(filter: String) {
+        
+    }
+    
+    
 }
 
 //MARK: - UITextFieldDelegate
@@ -375,6 +395,18 @@ extension TrackerViewController: HabitCreateViewControllerDelegate {
     func reloadData() {
         reloadVisibleCategories()
     }
+    
+    func editButtonTap(name: String, tracker: Tracker, category: String) {
+        guard let index = categories.firstIndex(where: { $0.title == category }) else { return }
+        var updatedTrackers = categories[index].trackers
+        if let  desiredTrackerIndex = updatedTrackers.firstIndex(where: { $0.name == name }) {
+            updatedTrackers[desiredTrackerIndex] = tracker
+            let updatedCategory = TrackerCategory(title: category, trackers: updatedTrackers)
+            categories[index] = updatedCategory
+        }
+        
+        reloadVisibleCategories()
+    }
 }
 
 
@@ -405,9 +437,20 @@ extension TrackerViewController: IrregularEventViewControllerDelegate {
 
 extension TrackerViewController: TrackerCellDelegate {
     
-    func trackerWasDeleted() {
-        fetchTrackers()
-        reloadVisibleCategories()
+    func trackerWasDeleted(name: String) {
+        
+        let actionSheet = UIAlertController(title: "", message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
+        let action1 = UIAlertAction(title: "Delete", style: .destructive) { _ in
+            TrackerStore.shared.deleteTracker(with: name)
+            self.fetchTrackers()
+            self.reloadVisibleCategories()
+        }
+        
+        let action2 = UIAlertAction(title: "Cancel", style: .cancel)
+        actionSheet.addAction(action1)
+        actionSheet.addAction(action2)
+        present(actionSheet, animated: true)
+        
     }
     
     func comletedTracker(id: UUID, indexPath: IndexPath) {
@@ -429,6 +472,21 @@ extension TrackerViewController: TrackerCellDelegate {
         
         collectionView.reloadItems(at: [indexPath])
     }
+    
+    func editTracker(with id: UUID) {
+        let trackerCoreData = TrackerStore.shared.fetchTracker(with: id)
+        let tracker = TrackerStore.shared.convertToTracker(coreDataTracker: trackerCoreData)
+        let vc = HabitCreateViewController()
+        vc.createHabitViewControllerDelegate = self
+        vc.isEdit = true
+        vc.tracker = tracker
+        
+        if tracker.schedule.count == 7 {
+            vc.isHabit = true
+        }
+        
+        present(vc, animated: true)
+    }
 }
 
 extension TrackerViewController: TrackerCategoryStoreDelegate {
@@ -439,14 +497,3 @@ extension TrackerViewController: TrackerCategoryStoreDelegate {
         reloadVisibleCategories()
     }
 }
-
-//extension TrackerViewController: UISearchResultsUpdating {
-//    func updateSearchResults(for searchController: UISearchController) {
-//        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
-//            reloadVisibleCategories()
-//            
-//        }
-//    }
-//    
-//    
-//}

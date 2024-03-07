@@ -49,3 +49,10 @@
 "shortSaturday" = "Sat";
 "shortWednesday" = "Wed";
 "shortSunday" = "Sun";
+"everyday" = "Everyday";
+"Filters" = "Filters";
+"All trackers" = "All trackers";
+"Trackers for today" =  "Trackers for today";
+"CompletedTrackers" = "Completed";
+"Not completed trackers" = "Not completed";
+"Edit Title" = "Edit";

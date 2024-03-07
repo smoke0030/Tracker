@@ -48,4 +48,10 @@ final class HabitCollectionColorCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func cellSelected(with color: CGColor) {
+        contentView.layer.borderWidth = 3
+        contentView.layer.borderColor = color
+        contentView.layer.cornerRadius = 12
+    }
 }

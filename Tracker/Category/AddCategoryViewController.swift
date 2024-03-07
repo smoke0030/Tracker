@@ -27,9 +27,9 @@ final class AddCategoryViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(NSLocalizedString("addCategoryButton", comment: ""), for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         button.addTarget(self, action: #selector(doneButtonTapped(_ :)), for: .touchUpInside)
-        button.backgroundColor = #colorLiteral(red: 0.7369984984, green: 0.7409694791, blue: 0.7575188279, alpha: 1)
+        button.backgroundColor = Colors.shared.buttonsBackground
         button.layer.cornerRadius = 16
         button.isEnabled = false
         return button
@@ -49,7 +49,7 @@ final class AddCategoryViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 16
-        view.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
+        view.backgroundColor = Colors.shared.dark
         return view
     }()
     
@@ -76,7 +76,7 @@ final class AddCategoryViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         [categoryTitle, doneButton, textFieldView].forEach {
             view.addSubview($0)
         }
