@@ -54,3 +54,5 @@
 "Trackers for today" =  "Трекеры на сегодня";
 "CompletedTrackers" = "Завершенные";
 "Not completed trackers" = "Не завершенные";
+"statistic" = "Статистика";
+"empty statistic" = "Анализировать пока нечего";

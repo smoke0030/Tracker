@@ -57,7 +57,7 @@ final class TrackerStore: NSObject {
         let scheduleString = schedule.compactMap {
             WeekDay(rawValue: $0)
         }
-        let tracker = Tracker(id: id, name: name, color: newColor, emoji: emoji, schedule: scheduleString, isPinned: false)
+        let tracker = Tracker(id: id, name: name, color: newColor, emoji: emoji, schedule: scheduleString, isPinned: isPinned)
         return tracker
     }
     

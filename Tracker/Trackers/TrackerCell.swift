@@ -10,7 +10,7 @@ import UIKit
 protocol TrackerCellDelegate: AnyObject {
     func comletedTracker(id: UUID, indexPath: IndexPath)
     func uncomletedTracker(id: UUID, indexPath: IndexPath)
-    func trackerWasDeleted(name: String)
+    func trackerWasDeleted(name: String, id: UUID)
     func editTracker(with id: UUID)
     
 }
@@ -185,17 +185,17 @@ final class TrackerCell: UICollectionViewCell {
         return resultString
     }
     
-    func deleteTrac(with name: String) {
-        TrackerStore.shared.deleteTracker(with: name)
-        
-    }
+//    func deleteTrac(with name: String) {
+//        TrackerStore.shared.deleteTracker(with: name)
+//        
+//    }
 }
 
 extension TrackerCell: UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let secureAction = UIAction(title: "Закрепить") { action in
+            let pinAction = UIAction(title: "Закрепить") { action in
                 
             }
             
@@ -205,15 +205,16 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
             }
             
             let deleteAction = UIAction(title: "Удалить", attributes: .destructive ) { _ in
-                guard let name = self.label.text else {
+                guard let name = self.label.text,
+                      let trackerID = self.trackerID else {
                     return
                 }
                 
-                self.delegate?.trackerWasDeleted(name: name)
+                self.delegate?.trackerWasDeleted(name: name, id: trackerID)
                
             }
             
-            return UIMenu(title: "", children: [secureAction, editAction, deleteAction])
+            return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
         }
         
         return configuration

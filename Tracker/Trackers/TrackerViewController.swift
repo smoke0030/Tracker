@@ -103,6 +103,8 @@ final class TrackerViewController: UIViewController {
         createGesture()
         setupEmptyViews()
         
+       
+        
     }
     
     private func fetchTrackers() {
@@ -289,7 +291,30 @@ final class TrackerViewController: UIViewController {
 
 extension TrackerViewController: FiltersViewControllerDelegate {
     func didSelectFilter(filter: String) {
+        let selectedDate = datePicker.date
+        let calendar = Calendar.current
+        dateFormatter.locale = Locale.current
+        let weekDaySymbols = dateFormatter.shortWeekdaySymbols
+        let filterWeekDay = calendar.component(.weekday, from: selectedDate)
+        let weekDayName = weekDaySymbols?[filterWeekDay - 1]
         
+        guard let day = weekDayName else { return }
+        
+        if filter == NSLocalizedString("Trackers for today", comment: "") {
+            let filteredTrackers = categories.compactMap { category in
+                let trackers = category.trackers.filter { tracker in
+                    let dayCondition = tracker.schedule.contains { weekDay in
+                        weekDay.shortTitle == day
+                    }
+                    return dayCondition
+                }
+                
+                return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
+            }
+            
+            visibleCategories = filteredTrackers
+            collectionView.reloadData()
+        }
     }
     
     
@@ -437,10 +462,11 @@ extension TrackerViewController: IrregularEventViewControllerDelegate {
 
 extension TrackerViewController: TrackerCellDelegate {
     
-    func trackerWasDeleted(name: String) {
+    func trackerWasDeleted(name: String, id: UUID) {
         
         let actionSheet = UIAlertController(title: "", message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
         let action1 = UIAlertAction(title: "Delete", style: .destructive) { _ in
+//            TrackerRecordStore.shared.deleteRecord(id: <#T##UUID#>, date: <#T##Date#>)
             TrackerStore.shared.deleteTracker(with: name)
             self.fetchTrackers()
             self.reloadVisibleCategories()
@@ -464,13 +490,19 @@ extension TrackerViewController: TrackerCellDelegate {
     
     func uncomletedTracker(id: UUID, indexPath: IndexPath) {
         
+        var trackerRecords: TrackerRecord?
         completedTrackers.removeAll { trackerRecord in
+            trackerRecords = trackerRecord
             let isSameDay = Calendar.current.isDate(trackerRecord.date, inSameDayAs: datePicker.date)
-            TrackerRecordStore.shared.deleteRecord(id: trackerRecord.id)
             return trackerRecord.id == id && isSameDay
         }
         
+        guard let data = trackerRecords else { return }
+        
+        TrackerRecordStore.shared.deleteRecord(id: data.id, date: data.date)
+        
         collectionView.reloadItems(at: [indexPath])
+        
     }
     
     func editTracker(with id: UUID) {

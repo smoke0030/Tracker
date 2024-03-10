@@ -67,6 +67,27 @@ final class Colors {
             
         }
     }
+    
+    func setTriColorBorder(view: UIView) {
+            let gradientLayer = CAGradientLayer()
+            gradientLayer.frame = view.bounds
+            gradientLayer.colors = [
+                UIColor.red.cgColor,
+                UIColor.green.cgColor,
+                UIColor.blue.cgColor
+            ]
+            gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+
+            let shapeLayer = CAShapeLayer()
+            shapeLayer.lineWidth = 2
+            shapeLayer.path = UIBezierPath(rect: view.bounds).cgPath
+            shapeLayer.fillColor = nil
+            shapeLayer.strokeColor = nil
+            gradientLayer.mask = shapeLayer
+
+            view.layer.addSublayer(gradientLayer)
+        }
 
 }
 
