@@ -80,8 +80,7 @@ final class TrackerStore: NSObject {
     }
     
     func editTracker(name: String, tracker: Tracker, category: TrackerCategory) {
-        let editedTracker = fetchTracker(name: name)
-        editedTracker.id = tracker.id
+        let editedTracker = fetchTracker(name: tracker.name)
         editedTracker.name = tracker.name
         editedTracker.emoji = tracker.emoji
         editedTracker.color = UIColorMarshalling.hexString(from: tracker.color)
@@ -92,7 +91,6 @@ final class TrackerStore: NSObject {
         
         let fetchedCategory = TrackerCategoryStore.shared.fetchCategoryWithTitle(title: category.title)
         editedTracker.category = fetchedCategory
-        
         appDelegate.saveContext()
     }
     

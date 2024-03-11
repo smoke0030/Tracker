@@ -14,7 +14,7 @@ final class TrackerTests: XCTestCase {
     func testViewController() {
             let vc = UINavigationController(rootViewController: TabBarController())
             
-            assertSnapshot(matching: vc, as: .image)                                             // 2
+            assertSnapshot(matching: vc, as: .image)                                             
         }
 
 }

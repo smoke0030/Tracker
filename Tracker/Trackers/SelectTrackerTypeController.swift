@@ -9,8 +9,8 @@ import UIKit
 
 final class SelectTrackerTypeController: UIViewController {
     
-    weak var habitCreateViewControllerDelegate: HabitCreateViewControllerDelegate?
-    weak var irregularViewControllerDelegate: IrregularEventViewControllerDelegate?
+    weak var habitCreateViewControllerDelegate: TrackerCreateViewControllerDelegate?
+//    weak var irregularViewControllerDelegate: IrregularEventViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,14 +66,16 @@ final class SelectTrackerTypeController: UIViewController {
     
     @objc func habitButoonTapped() {
         
-        let vc = HabitCreateViewController()
+        let vc = TrackerCreateViewControlelr()
         vc.createHabitViewControllerDelegate = habitCreateViewControllerDelegate
+        vc.isHabit = true
         present(vc, animated: true)
     }
     
     @objc func irregularEventButtonTapped() {
-        let vc = IrregularEventViewController()
-        vc.irregularEventViewControllerDelegate = irregularViewControllerDelegate
+        let vc = TrackerCreateViewControlelr()
+        vc.createHabitViewControllerDelegate = habitCreateViewControllerDelegate
+        vc.isHabit = false
         present(vc, animated: true)
     }
     

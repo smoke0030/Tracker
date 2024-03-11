@@ -289,8 +289,8 @@ final class TrackerViewController: UIViewController {
                 
                 newTracker = trackers.filter { tracker in
                     let dayMatch = tracker.schedule.contains { $0.shortTitle == day }
-                                let idMatch = completedTrackerIds.contains(tracker.id)
-                                return dayMatch && idMatch
+                    let idMatch = completedTrackerIds.contains(tracker.id)
+                    return dayMatch && idMatch
                 }
                 
                 if !newTracker.isEmpty {
@@ -305,19 +305,19 @@ final class TrackerViewController: UIViewController {
             collectionView.reloadData()
         } else {
             var incompleteCategories: [TrackerCategory] = []
-
+            
             categories.forEach { category in
                 var newTrackers: [Tracker] = []
-
+                
                 let trackers = category.trackers
                 let completedTrackerIds = Set(completedTrackers.map { $0.id })
-
+                
                 newTrackers = trackers.filter { tracker in
                     let dayMatch = tracker.schedule.contains { $0.shortTitle == day }
-                                let idMatch = !completedTrackerIds.contains(tracker.id)
-                                return dayMatch && idMatch
+                    let idMatch = !completedTrackerIds.contains(tracker.id)
+                    return dayMatch && idMatch
                 }
-
+                
                 if !newTrackers.isEmpty {
                     let newCategory = TrackerCategory(title: category.title, trackers: newTrackers)
                     incompleteCategories.append(newCategory)
@@ -346,7 +346,7 @@ final class TrackerViewController: UIViewController {
     @objc private func addButtonTapped() {
         let selectTrackerTypeController = SelectTrackerTypeController()
         selectTrackerTypeController.habitCreateViewControllerDelegate = self
-        selectTrackerTypeController.irregularViewControllerDelegate = self
+//        selectTrackerTypeController.irregularViewControllerDelegate = self
         self.present(selectTrackerTypeController, animated: true)
         
     }
@@ -383,8 +383,8 @@ extension TrackerViewController: FiltersViewControllerDelegate {
         default:
             break
         }
-        }
     }
+}
 
 //MARK: - UITextFieldDelegate
 
@@ -467,7 +467,7 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 
 //MARK: - HabitCreateViewControllerDelegate
 
-extension TrackerViewController: HabitCreateViewControllerDelegate {
+extension TrackerViewController: TrackerCreateViewControllerDelegate {
     func createButtonTap(_ tracker: Tracker, category: String) {
         if let index = categories.firstIndex(where: { $0.title == category }) {
             var updatedTrackers = categories[index].trackers
@@ -501,28 +501,28 @@ extension TrackerViewController: HabitCreateViewControllerDelegate {
 }
 
 
-extension TrackerViewController: IrregularEventViewControllerDelegate {
-    func createButtonTapped(_ tracker: Tracker, category: String) {
-        if let index = categories.firstIndex(where: { $0.title == category }) {
-            var updatedTrackers = categories[index].trackers
-            updatedTrackers.append(tracker)
-            let updatedCategory =  TrackerCategory(title: category, trackers: updatedTrackers)
-            categories[index] = updatedCategory
-        } else {
-            let newCategory =  TrackerCategory(title: category, trackers: [tracker])
-            categories.append(newCategory)
-        }
-        emptyView.isHidden = true
-        emptyLabel.isHidden = true
-        reloadData()
-    }
-    
-    func reloadTrackersData() {
-        reloadVisibleCategories()
-    }
-    
-    
-}
+//extension TrackerViewController: IrregularEventViewControllerDelegate {
+//    func createButtonTapped(_ tracker: Tracker, category: String) {
+//        if let index = categories.firstIndex(where: { $0.title == category }) {
+//            var updatedTrackers = categories[index].trackers
+//            updatedTrackers.append(tracker)
+//            let updatedCategory =  TrackerCategory(title: category, trackers: updatedTrackers)
+//            categories[index] = updatedCategory
+//        } else {
+//            let newCategory =  TrackerCategory(title: category, trackers: [tracker])
+//            categories.append(newCategory)
+//        }
+//        emptyView.isHidden = true
+//        emptyLabel.isHidden = true
+//        reloadData()
+//    }
+//    
+//    func reloadTrackersData() {
+//        reloadVisibleCategories()
+//    }
+//    
+//    
+//}
 
 //MARK: - TrackerCellDelegate
 
@@ -530,8 +530,10 @@ extension TrackerViewController: TrackerCellDelegate {
     
     func trackerWasDeleted(name: String, id: UUID) {
         
-        let actionSheet = UIAlertController(title: "", message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
-        let action1 = UIAlertAction(title: "Delete", style: .destructive) { _ in
+        let actionSheet = UIAlertController(title: "", message: NSLocalizedString("tracker alert text", comment: ""),
+                                            preferredStyle: .actionSheet)
+        let action1 = UIAlertAction(title: NSLocalizedString("Delete", comment: ""), 
+                                    style: .destructive) { _ in
             
             TrackerRecordStore.shared.deleteRecord(with: id)
             TrackerStore.shared.deleteTracker(with: name)
@@ -539,7 +541,7 @@ extension TrackerViewController: TrackerCellDelegate {
             self.reloadVisibleCategories()
         }
         
-        let action2 = UIAlertAction(title: "Cancel", style: .cancel)
+        let action2 = UIAlertAction(title: NSLocalizedString("habitCancelButton", comment: ""), style: .cancel)
         actionSheet.addAction(action1)
         actionSheet.addAction(action2)
         present(actionSheet, animated: true)
@@ -572,13 +574,14 @@ extension TrackerViewController: TrackerCellDelegate {
         
     }
     
-    func editTracker(with id: UUID) {
+    func editTracker(with id: UUID, completedDays: Int) {
         let trackerCoreData = TrackerStore.shared.fetchTracker(with: id)
         let tracker = TrackerStore.shared.convertToTracker(coreDataTracker: trackerCoreData)
-        let vc = HabitCreateViewController()
+        let vc = TrackerCreateViewControlelr()
         vc.createHabitViewControllerDelegate = self
         vc.isEdit = true
         vc.tracker = tracker
+        vc.completedDays = completedDays
         
         if tracker.schedule.count == 7 {
             vc.isHabit = true

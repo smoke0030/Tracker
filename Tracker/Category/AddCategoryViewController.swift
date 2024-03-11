@@ -26,10 +26,10 @@ final class AddCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(NSLocalizedString("addCategoryButton", comment: ""), for: .normal)
+        button.setTitle(NSLocalizedString("done", comment: ""), for: .normal)
         button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         button.addTarget(self, action: #selector(doneButtonTapped(_ :)), for: .touchUpInside)
-        button.backgroundColor = Colors.shared.buttonsBackground
+        button.backgroundColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
         button.layer.cornerRadius = 16
         button.isEnabled = false
         return button
@@ -121,7 +121,7 @@ final class AddCategoryViewController: UIViewController {
             clearTextFieldButton.isHidden = true
         } else {
             doneButton.isEnabled = true
-            doneButton.backgroundColor = .black
+            doneButton.backgroundColor = Colors.shared.buttonsBackground
             clearTextFieldButton.isHidden = false
         }
     }

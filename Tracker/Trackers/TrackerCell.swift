@@ -11,7 +11,7 @@ protocol TrackerCellDelegate: AnyObject {
     func comletedTracker(id: UUID, indexPath: IndexPath)
     func uncomletedTracker(id: UUID, indexPath: IndexPath)
     func trackerWasDeleted(name: String, id: UUID)
-    func editTracker(with id: UUID)
+    func editTracker(with id: UUID, completedDays: Int)
     
 }
 
@@ -20,7 +20,7 @@ final class TrackerCell: UICollectionViewCell {
     private var isCompleted: Bool = false
     private var trackerID: UUID?
     private var indexPath: IndexPath?
-    
+    private var completedDays: Int?
     
     weak var delegate: TrackerCellDelegate?
     
@@ -152,6 +152,7 @@ final class TrackerCell: UICollectionViewCell {
         self.indexPath = indexPath
         self.isCompleted = isCompleted
         self.trackerID = object.id
+        self.completedDays = completedDays
         
         self.trackerView.backgroundColor = object.color
         if !isCompleted {
@@ -191,17 +192,18 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let pinAction = UIAction(title: "Закрепить") { action in
+            let pinAction = UIAction(title: NSLocalizedString("Pin", comment: "")) { action in
                 
             }
             
-            let editAction = UIAction(title: "Редактировать") { action in
-                guard let trackerID = self.trackerID else { return }
+            let editAction = UIAction(title: NSLocalizedString("Edit Title", comment: "")) { action in
+                guard let trackerID = self.trackerID,
+                      let completedDays = self.completedDays else { return }
                 
-                self.delegate?.editTracker(with: trackerID)
+                self.delegate?.editTracker(with: trackerID, completedDays: completedDays)
             }
             
-            let deleteAction = UIAction(title: "Удалить", attributes: .destructive ) { _ in
+            let deleteAction = UIAction(title: NSLocalizedString("Delete", comment: ""), attributes: .destructive ) { _ in
                 guard let name = self.label.text,
                       let trackerID = self.trackerID else {
                     return

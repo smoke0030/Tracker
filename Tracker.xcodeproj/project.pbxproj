@@ -9,12 +9,6 @@
 /* Begin PBXBuildFile section */
 		1557817ADB26524DFF58EDF5 /* Pods_TrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E18C2592C47A83E1183DE59B /* Pods_TrackerTests.framework */; };
 		3F4575CFC4F513A864A2CD85 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB21DED13C393A9A3B4C03A /* Pods_Tracker.framework */; };
-		8402C9722B4E9C18002F7D10 /* IrregularEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C9712B4E9C18002F7D10 /* IrregularEventViewController.swift */; };
-		8402C9752B555835002F7D10 /* IrregularTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C9742B555835002F7D10 /* IrregularTableCell.swift */; };
-		8402C9772B555983002F7D10 /* IrregularCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C9762B555983002F7D10 /* IrregularCollectionCell.swift */; };
-		8402C9792B555ABB002F7D10 /* IrregularColorCollectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C9782B555ABB002F7D10 /* IrregularColorCollectionHeaderCell.swift */; };
-		8402C97B2B57C20D002F7D10 /* IrregularEmojiCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C97A2B57C20D002F7D10 /* IrregularEmojiCollectionCell.swift */; };
-		8402C97D2B57E077002F7D10 /* IrregularEmojiCollectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C97C2B57E077002F7D10 /* IrregularEmojiCollectionHeaderCell.swift */; };
 		8402C97F2B5843D5002F7D10 /* HabitCollectionEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C97E2B5843D5002F7D10 /* HabitCollectionEmojiCell.swift */; };
 		8402C9812B584423002F7D10 /* HabitCollectionEmojiHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402C9802B584423002F7D10 /* HabitCollectionEmojiHeaderCell.swift */; };
 		840C4C8C2B78E633002E4F75 /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840C4C8B2B78E633002E4F75 /* UIColorMarshalling.swift */; };
@@ -29,7 +23,7 @@
 		842DE9142B91EB9900D5DBBF /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842DE9132B91EB9900D5DBBF /* WeekDay.swift */; };
 		846812372B2B224C00E52E53 /* TrackerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812362B2B224C00E52E53 /* TrackerCell.swift */; };
 		8468123A2B2CD59400E52E53 /* TrackerHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812392B2CD59400E52E53 /* TrackerHeaderCell.swift */; };
-		846812402B3189B500E52E53 /* HabitCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8468123F2B3189B500E52E53 /* HabitCreateViewController.swift */; };
+		846812402B3189B500E52E53 /* TrackerCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8468123F2B3189B500E52E53 /* TrackerCreateViewController.swift */; };
 		846812452B31A18E00E52E53 /* HabitTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812442B31A18E00E52E53 /* HabitTableCell.swift */; };
 		846812482B32DCB600E52E53 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812472B32DCB600E52E53 /* ScheduleViewController.swift */; };
 		8468124A2B32DE5900E52E53 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846812492B32DE5900E52E53 /* ScheduleCell.swift */; };
@@ -74,12 +68,6 @@
 /* Begin PBXFileReference section */
 		18FCC9D9D53A0CB9E2AD54D3 /* Pods-TrackerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerTests.release.xcconfig"; path = "Target Support Files/Pods-TrackerTests/Pods-TrackerTests.release.xcconfig"; sourceTree = "<group>"; };
 		2BB21DED13C393A9A3B4C03A /* Pods_Tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8402C9712B4E9C18002F7D10 /* IrregularEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEventViewController.swift; sourceTree = "<group>"; };
-		8402C9742B555835002F7D10 /* IrregularTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularTableCell.swift; sourceTree = "<group>"; };
-		8402C9762B555983002F7D10 /* IrregularCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularCollectionCell.swift; sourceTree = "<group>"; };
-		8402C9782B555ABB002F7D10 /* IrregularColorCollectionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularColorCollectionHeaderCell.swift; sourceTree = "<group>"; };
-		8402C97A2B57C20D002F7D10 /* IrregularEmojiCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEmojiCollectionCell.swift; sourceTree = "<group>"; };
-		8402C97C2B57E077002F7D10 /* IrregularEmojiCollectionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEmojiCollectionHeaderCell.swift; sourceTree = "<group>"; };
 		8402C97E2B5843D5002F7D10 /* HabitCollectionEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCollectionEmojiCell.swift; sourceTree = "<group>"; };
 		8402C9802B584423002F7D10 /* HabitCollectionEmojiHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCollectionEmojiHeaderCell.swift; sourceTree = "<group>"; };
 		840C4C8B2B78E633002E4F75 /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
@@ -97,7 +85,7 @@
 		842DE9132B91EB9900D5DBBF /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
 		846812362B2B224C00E52E53 /* TrackerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCell.swift; sourceTree = "<group>"; };
 		846812392B2CD59400E52E53 /* TrackerHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerHeaderCell.swift; sourceTree = "<group>"; };
-		8468123F2B3189B500E52E53 /* HabitCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreateViewController.swift; sourceTree = "<group>"; };
+		8468123F2B3189B500E52E53 /* TrackerCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCreateViewController.swift; sourceTree = "<group>"; };
 		846812442B31A18E00E52E53 /* HabitTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTableCell.swift; sourceTree = "<group>"; };
 		846812472B32DCB600E52E53 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		846812492B32DE5900E52E53 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
@@ -157,19 +145,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8402C9732B4E9C23002F7D10 /* Irregular */ = {
-			isa = PBXGroup;
-			children = (
-				8402C9712B4E9C18002F7D10 /* IrregularEventViewController.swift */,
-				8402C9742B555835002F7D10 /* IrregularTableCell.swift */,
-				8402C9762B555983002F7D10 /* IrregularCollectionCell.swift */,
-				8402C97A2B57C20D002F7D10 /* IrregularEmojiCollectionCell.swift */,
-				8402C9782B555ABB002F7D10 /* IrregularColorCollectionHeaderCell.swift */,
-				8402C97C2B57E077002F7D10 /* IrregularEmojiCollectionHeaderCell.swift */,
-			);
-			path = Irregular;
-			sourceTree = "<group>";
-		};
 		841CCF7C2B871E43003A5A98 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -215,7 +190,7 @@
 		846812432B31A16700E52E53 /* Habit */ = {
 			isa = PBXGroup;
 			children = (
-				8468123F2B3189B500E52E53 /* HabitCreateViewController.swift */,
+				8468123F2B3189B500E52E53 /* TrackerCreateViewController.swift */,
 				846812442B31A18E00E52E53 /* HabitTableCell.swift */,
 				846812822B445F1600E52E53 /* HabitCollectionColorCell.swift */,
 				8402C97E2B5843D5002F7D10 /* HabitCollectionEmojiCell.swift */,
@@ -298,7 +273,6 @@
 				84B7BFFE2B18B0430085E8EF /* Trackers */,
 				84ECE5B62B98F42900399667 /* Filters */,
 				846812432B31A16700E52E53 /* Habit */,
-				8402C9732B4E9C23002F7D10 /* Irregular */,
 				846812462B32DC8F00E52E53 /* Schedule */,
 				8468127D2B3EADD600E52E53 /* Category */,
 				84B7C0002B18B0660085E8EF /* Tab Bar */,
@@ -576,16 +550,12 @@
 				84B567722B9DD5D800DD71E9 /* AnaliticService.swift in Sources */,
 				840C4CCE2B7CC4B7002E4F75 /* TrackerCoreData+CoreDataProperties.swift in Sources */,
 				84B7C0052B18B0C50085E8EF /* TrackerCategory.swift in Sources */,
-				8402C97B2B57C20D002F7D10 /* IrregularEmojiCollectionCell.swift in Sources */,
 				84B7BF5F2B1620F80085E8EF /* AppDelegate.swift in Sources */,
 				846812452B31A18E00E52E53 /* HabitTableCell.swift in Sources */,
-				8402C9772B555983002F7D10 /* IrregularCollectionCell.swift in Sources */,
 				8402C9812B584423002F7D10 /* HabitCollectionEmojiHeaderCell.swift in Sources */,
 				846812832B445F1600E52E53 /* HabitCollectionColorCell.swift in Sources */,
 				84ABD0D22B617C74005724D7 /* TrackerRecordStore.swift in Sources */,
-				8402C9722B4E9C18002F7D10 /* IrregularEventViewController.swift in Sources */,
 				840C4CCC2B7CC4B7002E4F75 /* TrackerRecordCoreData+CoreDataProperties.swift in Sources */,
-				8402C9752B555835002F7D10 /* IrregularTableCell.swift in Sources */,
 				84D58AE02B5D8864001FD0E2 /* TrackerDataModel.xcdatamodeld in Sources */,
 				84ABD0CE2B617C5B005724D7 /* TrackerStore.swift in Sources */,
 				84B7BF772B16219A0085E8EF /* UicolorExtension.swift in Sources */,
@@ -607,10 +577,8 @@
 				84ABD0D02B617C69005724D7 /* TrackerCategoryStore.swift in Sources */,
 				8468123A2B2CD59400E52E53 /* TrackerHeaderCell.swift in Sources */,
 				8468127F2B3EAE0400E52E53 /* CategoryViewController.swift in Sources */,
-				846812402B3189B500E52E53 /* HabitCreateViewController.swift in Sources */,
-				8402C97D2B57E077002F7D10 /* IrregularEmojiCollectionHeaderCell.swift in Sources */,
+				846812402B3189B500E52E53 /* TrackerCreateViewController.swift in Sources */,
 				846812852B44630800E52E53 /* HabitCollectionHeaderCell.swift in Sources */,
-				8402C9792B555ABB002F7D10 /* IrregularColorCollectionHeaderCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

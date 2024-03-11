@@ -56,3 +56,8 @@
 "Not completed trackers" = "Не завершенные";
 "statistic" = "Статистика";
 "empty statistic" = "Анализировать пока нечего";
+"Edit Title" = "Редактирование";
+"Pin" = "Закрепить";
+"Delete" = "Удалить";
+"tracker alert text" = "Уверены что хотите удалить трекер?";
+"Save" = "Сохранить";
