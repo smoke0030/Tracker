@@ -20,11 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.rootViewController = TabBarController()
         window?.makeKeyAndVisible()
-        guard let configuration = YMMYandexMetricaConfiguration(apiKey: "4e0855b4-0408-44c1-94dc-33c8bd601419") else { 
-                return true
-            }
-                
-            YMMYandexMetrica.activate(with: configuration)
+        AnaliticService.activate()
         return true
     }
 

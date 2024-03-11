@@ -9,6 +9,8 @@ import UIKit
 
 final class TrackerViewController: UIViewController {
     
+    private let analiticService = AnaliticService()
+    
     private let dateFormatter: DateFormatter = {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "dd.MM.yy"
@@ -85,11 +87,9 @@ final class TrackerViewController: UIViewController {
     
     private var completedTrackers: [TrackerRecord] = []
     
-    
+    private var filter: String = String()
     
     var currentDate = Date()
-    
-    var formattedDate: Date?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,8 +103,14 @@ final class TrackerViewController: UIViewController {
         createGesture()
         setupEmptyViews()
         
-       
+        analiticService.report(event: "open", params: ["event" : "open", "screen" : "Main"])
         
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        analiticService.report(event: "close", params: ["event" : "close", "screen" : "Main"])
     }
     
     private func fetchTrackers() {
@@ -264,8 +270,76 @@ final class TrackerViewController: UIViewController {
         }
     }
     
+    private func updateFilteredCategories(completed: Bool) {
+        let selectedDate = datePicker.date
+        let calendar = Calendar.current
+        dateFormatter.locale = Locale.current
+        let weekDaySymbols  = dateFormatter.shortWeekdaySymbols
+        let filterWeekDay = calendar.component(.weekday, from: selectedDate)
+        let weekDayName = weekDaySymbols?[filterWeekDay - 1]
+        guard let day = weekDayName else { return }
+        if completed {
+            var filteredCategories: [TrackerCategory] = []
+            
+            categories.forEach { category in
+                var newTracker: [Tracker] = []
+                
+                let trackers = category.trackers
+                let completedTrackerIds = Set(completedTrackers.map { $0.id })
+                
+                newTracker = trackers.filter { tracker in
+                    let dayMatch = tracker.schedule.contains { $0.shortTitle == day }
+                                let idMatch = completedTrackerIds.contains(tracker.id)
+                                return dayMatch && idMatch
+                }
+                
+                if !newTracker.isEmpty {
+                    let newCategory = TrackerCategory(title: category.title, trackers: newTracker)
+                    filteredCategories.append(newCategory)
+                }
+            }
+            
+            filter = "Completed"
+            visibleCategories = filteredCategories
+            configureEmptyVIew()
+            collectionView.reloadData()
+        } else {
+            var incompleteCategories: [TrackerCategory] = []
+
+            categories.forEach { category in
+                var newTrackers: [Tracker] = []
+
+                let trackers = category.trackers
+                let completedTrackerIds = Set(completedTrackers.map { $0.id })
+
+                newTrackers = trackers.filter { tracker in
+                    let dayMatch = tracker.schedule.contains { $0.shortTitle == day }
+                                let idMatch = !completedTrackerIds.contains(tracker.id)
+                                return dayMatch && idMatch
+                }
+
+                if !newTrackers.isEmpty {
+                    let newCategory = TrackerCategory(title: category.title, trackers: newTrackers)
+                    incompleteCategories.append(newCategory)
+                }
+            }
+            filter = "Not completed"
+            visibleCategories = incompleteCategories
+            configureEmptyVIew()
+            collectionView.reloadData()
+        }
+    }
+    
     @objc private func dateChanged(_ sender: UIDatePicker) {
         reloadVisibleCategories()
+        
+        if !filter.isEmpty {
+            if filter == "Completed" {
+                updateFilteredCategories(completed: true)
+            } else {
+                updateFilteredCategories(completed: false)
+            }
+        }
         
     }
     
@@ -287,38 +361,30 @@ final class TrackerViewController: UIViewController {
         vc.delegate = self
         present(vc, animated: true)
     }
+    
+    
 }
 
 extension TrackerViewController: FiltersViewControllerDelegate {
     func didSelectFilter(filter: String) {
-        let selectedDate = datePicker.date
-        let calendar = Calendar.current
-        dateFormatter.locale = Locale.current
-        let weekDaySymbols = dateFormatter.shortWeekdaySymbols
-        let filterWeekDay = calendar.component(.weekday, from: selectedDate)
-        let weekDayName = weekDaySymbols?[filterWeekDay - 1]
-        
-        guard let day = weekDayName else { return }
-        
-        if filter == NSLocalizedString("Trackers for today", comment: "") {
-            let filteredTrackers = categories.compactMap { category in
-                let trackers = category.trackers.filter { tracker in
-                    let dayCondition = tracker.schedule.contains { weekDay in
-                        weekDay.shortTitle == day
-                    }
-                    return dayCondition
-                }
-                
-                return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
-            }
+        switch filter {
+        case NSLocalizedString("Trackers for today", comment: ""):
+            datePicker.date = currentDate
+            reloadVisibleCategories()
+        case NSLocalizedString("All trackers", comment: ""):
+            reloadVisibleCategories()
             
-            visibleCategories = filteredTrackers
-            collectionView.reloadData()
+        case NSLocalizedString("CompletedTrackers", comment: ""):
+            updateFilteredCategories(completed: true)
+            
+        case NSLocalizedString("Not completed trackers", comment: ""):
+            updateFilteredCategories(completed: false)
+            
+        default:
+            break
+        }
         }
     }
-    
-    
-}
 
 //MARK: - UITextFieldDelegate
 
@@ -353,7 +419,7 @@ extension TrackerViewController: UICollectionViewDataSource {
         let comletedDays = completedTrackers.filter { $0.id ==
             tracker.id
         }.count
-        cell.set(object: tracker, isComleted: isComletedToday, completedDays: comletedDays, indexPath: indexPath)
+        cell.set(object: tracker, isCompleted: isComletedToday, completedDays: comletedDays, indexPath: indexPath)
         return cell
     }
     
@@ -466,7 +532,8 @@ extension TrackerViewController: TrackerCellDelegate {
         
         let actionSheet = UIAlertController(title: "", message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
         let action1 = UIAlertAction(title: "Delete", style: .destructive) { _ in
-//            TrackerRecordStore.shared.deleteRecord(id: <#T##UUID#>, date: <#T##Date#>)
+            
+            TrackerRecordStore.shared.deleteRecord(with: id)
             TrackerStore.shared.deleteTracker(with: name)
             self.fetchTrackers()
             self.reloadVisibleCategories()
@@ -485,7 +552,7 @@ extension TrackerViewController: TrackerCellDelegate {
         TrackerRecordStore.shared.addRecord(tracker: trackerRecord)
         completedTrackers.append(trackerRecord)
         
-        collectionView.reloadItems(at: [indexPath])
+        collectionView.reloadData()
     }
     
     func uncomletedTracker(id: UUID, indexPath: IndexPath) {
@@ -501,7 +568,7 @@ extension TrackerViewController: TrackerCellDelegate {
         
         TrackerRecordStore.shared.deleteRecord(id: data.id, date: data.date)
         
-        collectionView.reloadItems(at: [indexPath])
+        collectionView.reloadData()
         
     }
     
@@ -529,3 +596,4 @@ extension TrackerViewController: TrackerCategoryStoreDelegate {
         reloadVisibleCategories()
     }
 }
+

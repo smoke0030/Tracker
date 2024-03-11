@@ -17,7 +17,7 @@ protocol TrackerCellDelegate: AnyObject {
 
 final class TrackerCell: UICollectionViewCell {
     
-    private var isComleted: Bool = false
+    private var isCompleted: Bool = false
     private var trackerID: UUID?
     private var indexPath: IndexPath?
     
@@ -73,7 +73,7 @@ final class TrackerCell: UICollectionViewCell {
             return
         }
         
-        if isComleted {
+        if isCompleted {
             delegate?.uncomletedTracker(id: trackerID, indexPath: indexPath)
         } else {
             delegate?.comletedTracker(id: trackerID, indexPath: indexPath)
@@ -141,7 +141,7 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     func set(object: Tracker,
-             isComleted: Bool,
+             isCompleted: Bool,
              completedDays: Int,
              indexPath: IndexPath
     ) {
@@ -150,11 +150,11 @@ final class TrackerCell: UICollectionViewCell {
         paragraphStyle.lineHeightMultiple = 1.26
         
         self.indexPath = indexPath
-        self.isComleted = isComleted
+        self.isCompleted = isCompleted
         self.trackerID = object.id
         
         self.trackerView.backgroundColor = object.color
-        if !isComleted {
+        if !isCompleted {
             self.plusButton.backgroundColor = object.color
             self.plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
         } else {
@@ -185,10 +185,6 @@ final class TrackerCell: UICollectionViewCell {
         return resultString
     }
     
-//    func deleteTrac(with name: String) {
-//        TrackerStore.shared.deleteTracker(with: name)
-//        
-//    }
 }
 
 extension TrackerCell: UIContextMenuInteractionDelegate {
@@ -201,6 +197,7 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
             
             let editAction = UIAction(title: "Редактировать") { action in
                 guard let trackerID = self.trackerID else { return }
+                
                 self.delegate?.editTracker(with: trackerID)
             }
             

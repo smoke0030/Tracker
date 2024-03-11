@@ -17,6 +17,8 @@ final class HabitCreateViewController: UIViewController {
     
     weak var createHabitViewControllerDelegate: HabitCreateViewControllerDelegate?
     
+    private let analiticService = AnaliticService()
+    
     private var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE"
@@ -49,6 +51,14 @@ final class HabitCreateViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
+    
+    private var editTitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 32, weight: .bold)
         return label
     }()
     
@@ -225,6 +235,7 @@ final class HabitCreateViewController: UIViewController {
         TrackerStore.shared.log()
         createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
+        analiticService.report(event: "click", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
         dismiss()
         
     }
@@ -235,12 +246,13 @@ final class HabitCreateViewController: UIViewController {
             return
         }
         
-        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays, isPinned: false)
-        
         guard let editTracker = tracker else { return }
+        let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: self.selectedDays, isPinned: editTracker.isPinned)
+        
         TrackerStore.shared.editTracker(name: editTracker.name, tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         createHabitViewControllerDelegate?.editButtonTap(name: editTracker.name, tracker: object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
+        
         dismiss()
     }
     
@@ -283,7 +295,8 @@ final class HabitCreateViewController: UIViewController {
     private func configureViews() {
         if isEdit {
             guard let editTracker = tracker else { return }
-            habitTitleLabel.text = NSLocalizedString("Edit title", comment: "")
+            habitTitleLabel.text = NSLocalizedString("Edit Title", comment: "")
+            editTitleLabel.text = "1234"
             textField.text = editTracker.name
             selectedDays = editTracker.schedule
             selectedColor = editTracker.color
@@ -330,6 +343,17 @@ final class HabitCreateViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        if isEdit {
+            NSLayoutConstraint.activate([
+                editTitleLabel.topAnchor.constraint(equalTo: habitTitleLabel.bottomAnchor, constant: 24),
+                editTitleLabel.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 16),
+                editTitleLabel.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -16),
+                textFieldView.topAnchor.constraint(equalTo: editTitleLabel.bottomAnchor, constant: 24),
+            ])
+            
+        } else {
+            textFieldView.topAnchor.constraint(equalTo: habitTitleLabel.bottomAnchor, constant: 24).isActive = true
+        }
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -20),
@@ -343,7 +367,7 @@ final class HabitCreateViewController: UIViewController {
             scrollContent.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             scrollContent.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             scrollContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            textFieldView.topAnchor.constraint(equalTo: habitTitleLabel.bottomAnchor, constant: 24),
+            
             textFieldView.heightAnchor.constraint(equalToConstant: 75),
             textFieldView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 16),
             textFieldView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -16),
@@ -376,6 +400,9 @@ final class HabitCreateViewController: UIViewController {
         
         
         if isEdit {
+            
+            scrollContent.addSubview(editTitleLabel)
+            
             [cancelButton, editButton].forEach {
                 buttonsStackView.addArrangedSubview($0)
             }
