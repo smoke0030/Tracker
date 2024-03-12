@@ -38,7 +38,6 @@ final class TrackerViewController: UIViewController {
     private lazy var emptyView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
     
@@ -98,9 +97,8 @@ final class TrackerViewController: UIViewController {
         setupContraints()
         setupNavBar()
         datePicker.date = currentDate
-        fetchTrackers()
-        fetchRecords()
         createGesture()
+        updateTrackerWithDateAndPin()
         setupEmptyViews()
         
         analiticService.report(event: "open", params: ["event" : "open", "screen" : "Main"])
@@ -113,18 +111,71 @@ final class TrackerViewController: UIViewController {
         analiticService.report(event: "close", params: ["event" : "close", "screen" : "Main"])
     }
     
-    private func fetchTrackers() {
-        let coreDataCats = TrackerCategoryStore.shared.fetchCoreDataCategory()
-        let objects = TrackerCategoryStore.shared.convertToCategory(coreDataCats)
-        categories = objects
-        filterSelected(filter: selectedFilter)
+    
+    private func updateTrackerWithDateAndPin() {
+        
+        self.categories = TrackerCategoryStore.shared.fetchCategories()
+        
+        var filteredCategories: [TrackerCategory] = []
+        
+        var pinnedTrackers: [Tracker] = []
+        
+        for category in categories {
+            let filteredByDate = category.trackers.filter { tracker in
+                return isTrackerScheduledOnSelectedDate(tracker: tracker)
+            }
+            let filteredByPin = filteredByDate.filter { tracker in
+                if tracker.isPinned {
+                    pinnedTrackers.append(tracker)
+                    return false
+                } else {
+                    return true
+                }
+            }
+            if !filteredByPin.isEmpty {
+                filteredCategories.append(TrackerCategory(title: category.title, trackers: filteredByPin))
+            }
+        }
+        if !pinnedTrackers.isEmpty {
+            let pinnedCategory = TrackerCategory(title: NSLocalizedString("Pinned", comment: ""), trackers: pinnedTrackers)
+            filteredCategories.insert(pinnedCategory, at: 0)
+        }
+        visibleCategories = filteredCategories
+        collectionView.reloadData()
     }
     
-    private func fetchRecords() {
-        let coreDataRecords = TrackerRecordStore.shared.fetchRecords()
-        let records = TrackerRecordStore.shared.convertRecord(records: coreDataRecords)
-        completedTrackers = records
-        filterSelected(filter: selectedFilter)
+    private func isTrackerScheduledOnSelectedDate(tracker: Tracker) -> Bool {
+        let selectedDate = datePicker.date
+        let calendar = Calendar.current
+        dateFormatter.locale = Locale.current
+        let weekDaySymbols  = dateFormatter.shortWeekdaySymbols
+        let filterWeekDay = calendar.component(.weekday, from: selectedDate)
+        let weekDayName = weekDaySymbols?[filterWeekDay - 1]
+        guard let day = weekDayName else { return  false }
+        return tracker.schedule.contains( where: {$0.shortTitle == day })
+    }
+    
+    private func reloadVisibleCategories() {
+        let filterText = (searchTextField.text ?? "").lowercased()
+        visibleCategories = categories.compactMap { category in
+            let trackers = category.trackers.filter { tracker in
+                let textCondition = filterText.isEmpty ||
+                tracker.name.lowercased().contains(filterText)
+                
+                let dayCondition = isTrackerScheduledOnSelectedDate(tracker: tracker)
+                
+                return textCondition && dayCondition
+            }
+            
+            if trackers.isEmpty {
+                return nil
+            }
+            return TrackerCategory(title: category.title,
+                                   trackers: trackers)
+        }
+        
+        configureEmptyVIew()
+        collectionView.reloadData()
         
     }
     
@@ -218,50 +269,37 @@ final class TrackerViewController: UIViewController {
             emptyLabel.isHidden = true
         }
     }
+    private func isMatchRecord(model: TrackerRecord, with trackerId: UUID) -> Bool {
+        return model.id == trackerId && Calendar.current.isDate(model.date, inSameDayAs: currentDate)
+    }
     
-    private func reloadVisibleCategories() {
-        let selectedDate = datePicker.date
-        let calendar = Calendar.current
-        dateFormatter.locale = Locale.current
-        let weekDaySymbols  = dateFormatter.shortWeekdaySymbols
-        let filterWeekDay = calendar.component(.weekday, from: selectedDate)
-        let filterText = (searchTextField.text ?? "").lowercased()
-        let weekDayName = weekDaySymbols?[filterWeekDay - 1]
-        guard let day = weekDayName else { return }
-        visibleCategories = categories.compactMap { category in
-            
-            let trackers = category.trackers.filter { tracker in
-                let textCondition = filterText.isEmpty ||
-                tracker.name.lowercased().contains(filterText)
-                
-                let dayCondition = tracker.schedule.contains { weekDay in
-                    weekDay.shortTitle == day
-                }
-                
-                return textCondition && dayCondition
+    private func filterCompletedTrackers(_ categories: [TrackerCategory]) -> [TrackerCategory] {
+
+        var filteredCategories: [TrackerCategory] = []
+
+        for category in categories {
+            let filteredTrackers = category.trackers.filter { tracker in
+                return completedTrackers.contains { isMatchRecord(model: $0, with: tracker.id) }
             }
-            
-            if trackers.isEmpty {
-                return nil
+
+            if !filteredTrackers.isEmpty {
+                filteredCategories.append(TrackerCategory(title: category.title, trackers: filteredTrackers))
             }
-            return TrackerCategory(title: category.title,
-                                   trackers: trackers)
         }
-        
-        configureEmptyVIew()
-        collectionView.reloadData()
-        
+        return filteredCategories
     }
     
     private func filterSelected(filter: String) {
         switch filter {
+        case NSLocalizedString("All trackers", comment: ""):
+            UserDefaults.standard.setValue("All trackers", forKey: "trackers")
+            updateTrackerWithDateAndPin()
+            configureEmptyVIew()
+            
         case NSLocalizedString("Trackers for today", comment: ""):
             UserDefaults.standard.setValue("Trackers for today", forKey: "trackers")
             datePicker.date = currentDate
-            reloadVisibleCategories()
-        case NSLocalizedString("All trackers", comment: ""):
-            UserDefaults.standard.setValue("All trackers", forKey: "trackers")
-            reloadVisibleCategories()
+            updateTrackerWithDateAndPin()
             
         case NSLocalizedString("CompletedTrackers", comment: ""):
             UserDefaults.standard.setValue("CompletedTrackers", forKey: "trackers")
@@ -294,7 +332,7 @@ final class TrackerViewController: UIViewController {
     }
     
     private func updateFilteredCategories(completed: Bool) {
-        reloadVisibleCategories()
+        updateTrackerWithDateAndPin()
         let filterWeekDay = Calendar.current.component(.weekday, from: datePicker.date)
         let day = dateFormatter.shortWeekdaySymbols?[filterWeekDay - 1] ?? ""
         
@@ -303,12 +341,11 @@ final class TrackerViewController: UIViewController {
         
         visibleCategories.forEach { category in
             let filteredTrackers = category.trackers.filter { tracker in
-                let dateMatch = completed ? completedTrackers.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: datePicker.date) }) : !completedTrackers.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: datePicker.date) })
                 
                 let dayMatch = tracker.schedule.contains { $0.shortTitle == day }
                 let idMatch = completed ? completedTrackerIds.contains(tracker.id) : !completedTrackerIds.contains(tracker.id)
                 
-                return dateMatch && idMatch && dayMatch
+                return idMatch && dayMatch
             }
             
             if !filteredTrackers.isEmpty {
@@ -331,6 +368,7 @@ final class TrackerViewController: UIViewController {
         if !selectedFilter.isEmpty {
             filterSelected(filter: selectedFilter)
         }
+        configureEmptyVIew()
         
     }
     
@@ -342,7 +380,6 @@ final class TrackerViewController: UIViewController {
     }
     
     @objc private func hideKeyboard() {
-        reloadVisibleCategories()
         searchTextField.resignFirstResponder()
     }
     
@@ -361,7 +398,7 @@ final class TrackerViewController: UIViewController {
 extension TrackerViewController: FiltersViewControllerDelegate {
     func didSelectFilter(filter: String) {
         selectedFilter = filter
-       filterSelected(filter: selectedFilter)
+        filterSelected(filter: selectedFilter)
     }
 }
 
@@ -483,23 +520,21 @@ extension TrackerViewController: TrackerCreateViewControllerDelegate {
 
 extension TrackerViewController: TrackerCellDelegate {
     func pinTracker(with tracker: Tracker) {
-//        TrackerStore.shared.pinTracker(id: tracker.id)
-        updatePinned(id: tracker.id)
-        
-            
+        TrackerStore.shared.pinTracker(id: tracker.id)
+        self.completedTrackers = TrackerRecordStore.shared.convertRecord(records: TrackerRecordStore.shared.fetchRecords())
+        updateTrackerWithDateAndPin()
     }
     
     func trackerWasDeleted(name: String, id: UUID) {
         
         let actionSheet = UIAlertController(title: "", message: NSLocalizedString("tracker alert text", comment: ""),
                                             preferredStyle: .actionSheet)
-        let action1 = UIAlertAction(title: NSLocalizedString("Delete", comment: ""), 
+        let action1 = UIAlertAction(title: NSLocalizedString("Delete", comment: ""),
                                     style: .destructive) { _ in
             
             TrackerRecordStore.shared.deleteRecord(with: id)
             TrackerStore.shared.deleteTracker(with: name)
-            self.fetchTrackers()
-            self.reloadVisibleCategories()
+            self.updateTrackerWithDateAndPin()
         }
         
         let action2 = UIAlertAction(title: NSLocalizedString("habitCancelButton", comment: ""), style: .cancel)

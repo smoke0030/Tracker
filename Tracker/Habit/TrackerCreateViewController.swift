@@ -590,14 +590,12 @@ extension TrackerCreateViewControlelr: UICollectionViewDataSource, UICollectionV
             colorCell.label.backgroundColor = colors[indexPath.row]
         
             if isEdit == true {
-                let color1 = colors[indexPath.row].cgColor.components
-                let color2 = selectedColor?.cgColor.components
-                if color1 == color2 {
-                    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+                if colors[indexPath.row] == selectedColor {
+                    self.habitCollectionColorView.selectItem(at: indexPath, animated: true, scrollPosition: .left)
                     colorCell.isSelected = true
-                    collectionView.reloadData()
                 }
-            }
+                }
+            
             
             return colorCell
             
