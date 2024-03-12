@@ -80,7 +80,8 @@ final class TrackerStore: NSObject {
     }
     
     func editTracker(name: String, tracker: Tracker, category: TrackerCategory) {
-        let editedTracker = fetchTracker(name: tracker.name)
+        let editedTracker = fetchTracker(name: name)
+        editedTracker.id = tracker.id
         editedTracker.name = tracker.name
         editedTracker.emoji = tracker.emoji
         editedTracker.color = UIColorMarshalling.hexString(from: tracker.color)
@@ -144,17 +145,6 @@ final class TrackerStore: NSObject {
         }
         
         return object[0]
-    }
-    
-    func fetchTrackers() {
-        do {
-            try fetchedResultsController.performFetch()
-            fetchedResultsController.fetchedObjects?.forEach { tracker in
-                let object = convertToTracker(coreDataTracker: tracker)
-            }
-        } catch {
-            print("Error fetching results: \(error)")
-        }
     }
     
     public func log() {

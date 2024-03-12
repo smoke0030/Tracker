@@ -9,7 +9,7 @@ import UIKit
 
 class FiltersTableViewCell: UITableViewCell {
     
-    private let filters: [String] = [
+    let filters: [String] = [
         NSLocalizedString("All trackers", comment: ""),
         NSLocalizedString("Trackers for today", comment: ""),
         NSLocalizedString("CompletedTrackers", comment: ""),

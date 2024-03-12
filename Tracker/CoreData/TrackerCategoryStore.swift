@@ -103,7 +103,7 @@ final class TrackerCategoryStore: NSObject {
                     color: UIColorMarshalling.color(from: trackerColor) ?? UIColor(),
                     emoji: trackerEmoji,
                     schedule: newSchedule,
-                    isPinned: false)
+                    isPinned: isPinned)
                 trackers.append(newTracker)
             }
             let category = TrackerCategory(title: title, trackers: trackers)

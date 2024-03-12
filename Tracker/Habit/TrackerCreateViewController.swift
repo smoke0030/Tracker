@@ -231,12 +231,11 @@ final class TrackerCreateViewControlelr: UIViewController {
         
         let days = isHabit ? self.selectedDays : WeekDay.allCases
         let object = Tracker(id: UUID(), name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: days, isPinned: false)
-        
         TrackerStore.shared.addTracker(tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         TrackerStore.shared.log()
         createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
-        analiticService.report(event: "click", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
+        analiticService.report(event: "add_track", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
         dismiss()
         
     }
@@ -247,11 +246,15 @@ final class TrackerCreateViewControlelr: UIViewController {
             return
         }
         
-        guard let editTracker = tracker else { return }
-        
+        guard let editTracker = tracker,
+              let color = selectedColor,
+              let emoji = selectedEmoji else {
+            
+            return
+        }
         let days = isHabit ? self.selectedDays : WeekDay.allCases
     
-        let object = Tracker(id: editTracker.id, name: trackerTitle, color: selectedColor ?? UIColor(), emoji: selectedEmoji ?? "", schedule: days, isPinned: editTracker.isPinned)
+        let object = Tracker(id: editTracker.id, name: trackerTitle, color: color, emoji: emoji, schedule: days, isPinned: editTracker.isPinned)
         
         TrackerStore.shared.editTracker(name: editTracker.name, tracker: object, category: TrackerCategory(title: selectedCategory, trackers: []))
         createHabitViewControllerDelegate?.editButtonTap(name: editTracker.name, tracker: object, category: selectedCategory)
@@ -585,11 +588,13 @@ extension TrackerCreateViewControlelr: UICollectionViewDataSource, UICollectionV
         if collectionView.accessibilityIdentifier == "habitCollectionColorView" {
             let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitCollectionColorCell", for: indexPath) as! HabitCollectionColorCell
             colorCell.label.backgroundColor = colors[indexPath.row]
-            
+        
             if isEdit == true {
-                if colors[indexPath.row] == selectedColor {
-                    
-                    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .left)
+                let color1 = colors[indexPath.row].cgColor.components
+                let color2 = selectedColor?.cgColor.components
+                if color1 == color2 {
+                    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+                    colorCell.isSelected = true
                     collectionView.reloadData()
                 }
             }

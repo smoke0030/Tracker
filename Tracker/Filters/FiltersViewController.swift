@@ -15,6 +15,8 @@ final class FiltersViewController: UIViewController {
     
     weak var delegate: FiltersViewControllerDelegate?
     
+    public var selectedFilter: String = String()
+    
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +44,8 @@ final class FiltersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        
+        let defaultString = UserDefaults.standard.string(forKey: "trackers") ?? ""
+        selectedFilter = NSLocalizedString("\(defaultString)", comment: "")
     }
     
     private func setupViews() {
@@ -70,7 +73,13 @@ extension FiltersViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FiltersTableViewCell", for: indexPath) as! FiltersTableViewCell
+        cell.selectionStyle = .none
         cell.set(with: indexPath)
+        if selectedFilter == cell.filters[indexPath.row] {
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .top)
+            cell.accessoryType = .checkmark
+            cell.isSelected = true
+        } 
         return cell
     }
     

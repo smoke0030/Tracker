@@ -17,6 +17,7 @@ protocol TrackerCellDelegate: AnyObject {
 
 final class TrackerCell: UICollectionViewCell {
     
+    private let analiticService = AnaliticService()
     private var isCompleted: Bool = false
     private var trackerID: UUID?
     private var indexPath: IndexPath?
@@ -77,7 +78,8 @@ final class TrackerCell: UICollectionViewCell {
             delegate?.uncomletedTracker(id: trackerID, indexPath: indexPath)
         } else {
             delegate?.comletedTracker(id: trackerID, indexPath: indexPath)
-        }
+            analiticService.report(event: "track", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
+        } 
     }
     
     override init(frame: CGRect) {
@@ -197,6 +199,7 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
             }
             
             let editAction = UIAction(title: NSLocalizedString("Edit Title", comment: "")) { action in
+                self.analiticService.report(event: "edit", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
                 guard let trackerID = self.trackerID,
                       let completedDays = self.completedDays else { return }
                 
@@ -204,6 +207,7 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
             }
             
             let deleteAction = UIAction(title: NSLocalizedString("Delete", comment: ""), attributes: .destructive ) { _ in
+                self.analiticService.report(event: "delete", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
                 guard let name = self.label.text,
                       let trackerID = self.trackerID else {
                     return
