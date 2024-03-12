@@ -153,14 +153,6 @@ final class TrackerCategoryStore: NSObject {
         
         appDelegate.saveContext()
     }
-    
-    //метод для отображение пути к базе
-    
-    public func log() {
-        if let url = appDelegate.persistentContainer.persistentStoreCoordinator.persistentStores.first?.url {
-            print(url)
-        }
-    }
 }
 
 

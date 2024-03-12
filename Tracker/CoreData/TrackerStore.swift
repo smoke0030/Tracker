@@ -95,6 +95,12 @@ final class TrackerStore: NSObject {
         appDelegate.saveContext()
     }
     
+    func pinTracker(id: UUID) {
+        let tracker = fetchTracker(with: id)
+        tracker.isPinned = !tracker.isPinned
+        appDelegate.saveContext()
+    }
+    
     func deleteTracker(with name: String) {
         
         let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")

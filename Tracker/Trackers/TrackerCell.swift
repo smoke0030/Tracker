@@ -12,7 +12,7 @@ protocol TrackerCellDelegate: AnyObject {
     func uncomletedTracker(id: UUID, indexPath: IndexPath)
     func trackerWasDeleted(name: String, id: UUID)
     func editTracker(with id: UUID, completedDays: Int)
-    
+    func pinTracker(with tracker: Tracker)
 }
 
 final class TrackerCell: UICollectionViewCell {
@@ -194,8 +194,11 @@ extension TrackerCell: UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let pinAction = UIAction(title: NSLocalizedString("Pin", comment: "")) { action in
+            let tracker = TrackerStore.shared.convertToTracker(coreDataTracker: TrackerStore.shared.fetchTracker(with: self.trackerID ?? UUID()))
+            let title = tracker.isPinned ? NSLocalizedString("Unpin", comment: "") : NSLocalizedString("Pin", comment: "")
+            let pinAction = UIAction(title: title) { action in
                 
+                self.delegate?.pinTracker(with: tracker)
             }
             
             let editAction = UIAction(title: NSLocalizedString("Edit Title", comment: "")) { action in

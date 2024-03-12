@@ -87,7 +87,7 @@ final class TrackerViewController: UIViewController {
     
     private var completedTrackers: [TrackerRecord] = []
     
-    private var selectedFilter: String = String()
+    private var selectedFilter = NSLocalizedString("All trackers", comment: "")
     
     var currentDate = Date()
     
@@ -117,14 +117,14 @@ final class TrackerViewController: UIViewController {
         let coreDataCats = TrackerCategoryStore.shared.fetchCoreDataCategory()
         let objects = TrackerCategoryStore.shared.convertToCategory(coreDataCats)
         categories = objects
-        reloadVisibleCategories()
+        filterSelected(filter: selectedFilter)
     }
     
     private func fetchRecords() {
         let coreDataRecords = TrackerRecordStore.shared.fetchRecords()
         let records = TrackerRecordStore.shared.convertRecord(records: coreDataRecords)
         completedTrackers = records
-        reloadVisibleCategories()
+        filterSelected(filter: selectedFilter)
         
     }
     
@@ -294,19 +294,21 @@ final class TrackerViewController: UIViewController {
     }
     
     private func updateFilteredCategories(completed: Bool) {
-        let selectedDate = datePicker.date
-        let filterWeekDay = Calendar.current.component(.weekday, from: selectedDate)
+        reloadVisibleCategories()
+        let filterWeekDay = Calendar.current.component(.weekday, from: datePicker.date)
         let day = dateFormatter.shortWeekdaySymbols?[filterWeekDay - 1] ?? ""
         
         let completedTrackerIds = Set(completedTrackers.map { $0.id })
-        
         var filteredCategories: [TrackerCategory] = []
         
-        categories.forEach { category in
+        visibleCategories.forEach { category in
             let filteredTrackers = category.trackers.filter { tracker in
+                let dateMatch = completed ? completedTrackers.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: datePicker.date) }) : !completedTrackers.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: datePicker.date) })
+                
                 let dayMatch = tracker.schedule.contains { $0.shortTitle == day }
                 let idMatch = completed ? completedTrackerIds.contains(tracker.id) : !completedTrackerIds.contains(tracker.id)
-                return dayMatch && idMatch
+                
+                return dateMatch && idMatch && dayMatch
             }
             
             if !filteredTrackers.isEmpty {
@@ -315,10 +317,13 @@ final class TrackerViewController: UIViewController {
             }
         }
         
-        selectedFilter = completed ? "Completed" : "Not completed"
         visibleCategories = filteredCategories
         configureEmptyVIew()
         collectionView.reloadData()
+    }
+    
+    private func updatePinned(id: UUID) {
+        
     }
     
     @objc private func dateChanged(_ sender: UIDatePicker) {
@@ -477,6 +482,12 @@ extension TrackerViewController: TrackerCreateViewControllerDelegate {
 //MARK: - TrackerCellDelegate
 
 extension TrackerViewController: TrackerCellDelegate {
+    func pinTracker(with tracker: Tracker) {
+//        TrackerStore.shared.pinTracker(id: tracker.id)
+        updatePinned(id: tracker.id)
+        
+            
+    }
     
     func trackerWasDeleted(name: String, id: UUID) {
         
