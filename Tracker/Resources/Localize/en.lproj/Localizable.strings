@@ -59,6 +59,8 @@
 "empty statistic" = "There is nothing to analyze yet";
 "Edit Title" = "Edit";
 "Pin" = "Pin";
+"Unpin" = "Unpin";
 "Delete" = "Delete";
 "tracker alert text" = "Are you sure you want to delete the tracker?";
 "Save" = "Save";
+"Pinned" = "Pinned";

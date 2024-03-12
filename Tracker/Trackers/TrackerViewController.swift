@@ -115,6 +115,7 @@ final class TrackerViewController: UIViewController {
     private func updateTrackerWithDateAndPin() {
         
         self.categories = TrackerCategoryStore.shared.fetchCategories()
+        self.completedTrackers = TrackerRecordStore.shared.convertRecord(records: TrackerRecordStore.shared.fetchRecords()) 
         
         var filteredCategories: [TrackerCategory] = []
         

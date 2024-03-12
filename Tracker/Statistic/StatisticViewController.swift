@@ -33,7 +33,7 @@ final class StatisticViewController: UIViewController {
     private lazy var placeholderImage: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.image = UIImage(named: "notFound")
+        view.image = UIImage(named: "stat")
         return view
     }()
     
