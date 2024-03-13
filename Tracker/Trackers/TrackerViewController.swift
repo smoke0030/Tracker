@@ -101,14 +101,14 @@ final class TrackerViewController: UIViewController {
         updateTrackerWithDateAndPin()
         setupEmptyViews()
         
-        analiticService.report(event: "open", params: ["event" : "open", "screen" : "Main"])
+        AnaliticService.report(event: "open", params: ["screen" : "Main"])
         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        analiticService.report(event: "close", params: ["event" : "close", "screen" : "Main"])
+        AnaliticService.report(event: "close", params: ["screen" : "Main"])
     }
     
     
@@ -205,7 +205,7 @@ final class TrackerViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 10),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: filtersButton.topAnchor, constant: -8),
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 88),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             searchTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
@@ -385,7 +385,7 @@ final class TrackerViewController: UIViewController {
     }
     
     @objc private func didTapFiltersButton() {
-        analiticService.report(event: "filter", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
+        AnaliticService.report(event: "click", params: ["screen" : "Main", "item" : "filter"])
         let vc = FiltersViewController()
         vc.delegate = self
         present(vc, animated: true)

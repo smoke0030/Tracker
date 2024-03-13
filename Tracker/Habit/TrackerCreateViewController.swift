@@ -235,7 +235,7 @@ final class TrackerCreateViewControlelr: UIViewController {
         TrackerStore.shared.log()
         createHabitViewControllerDelegate?.createButtonTap(object, category: selectedCategory)
         createHabitViewControllerDelegate?.reloadData()
-        analiticService.report(event: "add_track", params: ["event" : "click", "screen" : "Main", "items" : "add_track"])
+        AnaliticService.report(event: "click", params: ["screen" : "TrackerCreate", "item" : "add_track"])
         dismiss()
         
     }
@@ -416,7 +416,9 @@ final class TrackerCreateViewControlelr: UIViewController {
             textFieldView.heightAnchor.constraint(equalToConstant: 75),
             textFieldView.leadingAnchor.constraint(equalTo: scrollContent.leadingAnchor, constant: 16),
             textFieldView.trailingAnchor.constraint(equalTo: scrollContent.trailingAnchor, constant: -16),
-            textField.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),
+//            textField.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),
+            textField.topAnchor.constraint(equalTo: textFieldView.topAnchor, constant: 6),
+            textField.bottomAnchor.constraint(equalTo: textFieldView.bottomAnchor, constant: -6),
             textField.leadingAnchor.constraint(equalTo: textFieldView.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: clearTextFieldButton.leadingAnchor, constant: -12),
             clearTextFieldButton.centerYAnchor.constraint(equalTo: textFieldView.centerYAnchor),

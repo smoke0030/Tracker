@@ -11,10 +11,15 @@ import SnapshotTesting
 
 final class TrackerTests: XCTestCase {
 
-    func testViewController() {
+    func testLightViewController() {
             let vc = UINavigationController(rootViewController: TabBarController())
             
-            assertSnapshot(matching: vc, as: .image)                                             
+        assertSnapshot(matching: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
         }
-
+    
+    func testDarkViewController() {
+        let vc = UINavigationController(rootViewController: TabBarController())
+        
+        assertSnapshot(matching: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+    }
 }
