@@ -18,7 +18,7 @@ final class AddCategoryViewController: UIViewController {
     private lazy var categoryTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Новая категория"
+        label.text = NSLocalizedString("newCategoryTitle", comment: "")
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }()
@@ -26,10 +26,10 @@ final class AddCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(NSLocalizedString("done", comment: ""), for: .normal)
+        button.setTitleColor(Colors.shared.buttonTextColor, for: .normal)
         button.addTarget(self, action: #selector(doneButtonTapped(_ :)), for: .touchUpInside)
-        button.backgroundColor = #colorLiteral(red: 0.7369984984, green: 0.7409694791, blue: 0.7575188279, alpha: 1)
+        button.backgroundColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
         button.layer.cornerRadius = 16
         button.isEnabled = false
         return button
@@ -49,14 +49,14 @@ final class AddCategoryViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 16
-        view.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
+        view.backgroundColor = Colors.shared.dark
         return view
     }()
     
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("newCategoryTFPlaceholder", comment: "")
         textField.font = .systemFont(ofSize: 17, weight: .regular)
         textField.addTarget(self, action: #selector(didChangeTF), for: .editingChanged)
         return textField
@@ -76,7 +76,7 @@ final class AddCategoryViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         [categoryTitle, doneButton, textFieldView].forEach {
             view.addSubview($0)
         }
@@ -121,7 +121,7 @@ final class AddCategoryViewController: UIViewController {
             clearTextFieldButton.isHidden = true
         } else {
             doneButton.isEnabled = true
-            doneButton.backgroundColor = .black
+            doneButton.backgroundColor = Colors.shared.buttonsBackground
             clearTextFieldButton.isHidden = false
         }
     }

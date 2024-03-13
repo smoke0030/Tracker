@@ -9,21 +9,24 @@ import UIKit
 
 class TabBarController: UITabBarController {
     
+    private let topBorder = CALayer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
         setBorder()
+        updateBorder()
     }
     
     private func setupTabBar() {
         
         let vc = UINavigationController(rootViewController: TrackerViewController())
         
-        vc.tabBarItem.title = "Трекеры"
+        vc.tabBarItem.title = NSLocalizedString("tabBarTrackers", comment: "")
         vc.tabBarItem.image = UIImage(named: "trackerImage")
         
         let statisticVC = setupVC(vc: StatisticViewController(),
-                                  title: "Стастистика",
+                                  title: NSLocalizedString("tabBarStatistic", comment: ""),
                                   image: UIImage(named: "statisticImage"))
         viewControllers = [vc, statisticVC]
     }
@@ -34,11 +37,19 @@ class TabBarController: UITabBarController {
         return vc
     }
     
+    
+    private func updateBorder() {
+        topBorder.backgroundColor = Colors.shared.tabBarBorder.cgColor
+    }
     private func setBorder() {
-        let topBorder = CALayer()
         topBorder.frame = CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 1)
-        topBorder.backgroundColor = #colorLiteral(red: 0.7369984984, green: 0.7409694791, blue: 0.7575188279, alpha: 1)
         tabBar.layer.addSublayer(topBorder)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        updateBorder()
     }
     
 }

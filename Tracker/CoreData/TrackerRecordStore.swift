@@ -33,20 +33,59 @@ final class TrackerRecordStore: NSObject {
         appDelegate.saveContext()
     }
     
-    func deleteRecord(id: UUID) {
-        
+    func deleteRecord(id: UUID, date: Date) {
         let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
-        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        let uuid = id.uuidString
+        let idPredicate = NSPredicate(format: "id == %@", uuid)
+        let datePredicate = NSPredicate(format: "date == %@", date as CVarArg)
+        
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, datePredicate])
+        
+        request.predicate = compoundPredicate
         
         do {
             let objects = try context.fetch(request)
-            let deletedObject = objects[0]
-            context.delete(deletedObject)
+            if let deletedObject = objects.first {
+                context.delete(deletedObject)
+                
+            }
         } catch let error as NSError {
             print(error.localizedDescription)
         }
         
         appDelegate.saveContext()
+    }
+    
+    func deleteRecord(with id: UUID) {
+        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        let uuid = id.uuidString
+        request.predicate = NSPredicate(format: "id == %@", uuid)
+        
+        do {
+            let objects = try context.fetch(request)
+            for object in objects {
+                context.delete(object)
+            }
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        appDelegate.saveContext()
+    }
+    
+    
+    func fetchRecord(with id: UUID) -> [TrackerRecordCoreData] {
+        var record: [TrackerRecordCoreData] = []
+        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        let uuid = id.uuidString
+        request.predicate = NSPredicate(format: "id == %@", uuid)
+        do {
+            record = try context.fetch(request)
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        return record
     }
     
     func fetchRecords() -> [TrackerRecordCoreData] {
@@ -74,4 +113,7 @@ final class TrackerRecordStore: NSObject {
         return returnedRecords
     }
     
+    func getCountOfCompletedTrackers() -> Int {
+        fetchRecords().count
+    }
 }

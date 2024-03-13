@@ -87,18 +87,23 @@ final class TrackerCategoryStore: NSObject {
                       let trackerColor = tracker.color,
                       let trackerEmoji = tracker.emoji,
                       let trackerSchedule = tracker.schedule
+    
                 else {
                     continue
             }
                 let newSchedule = trackerSchedule.compactMap() {
                     WeekDay(rawValue: $0)
                 }
+                
+                let isPinned = tracker.isPinned
+                
                 let newTracker = Tracker(
                     id: trackerID,
                     name: trackerName,
                     color: UIColorMarshalling.color(from: trackerColor) ?? UIColor(),
                     emoji: trackerEmoji,
-                    schedule: newSchedule)
+                    schedule: newSchedule,
+                    isPinned: isPinned)
                 trackers.append(newTracker)
             }
             let category = TrackerCategory(title: title, trackers: trackers)
@@ -147,14 +152,6 @@ final class TrackerCategoryStore: NSObject {
         }
         
         appDelegate.saveContext()
-    }
-    
-    //метод для отображение пути к базе
-    
-    public func log() {
-        if let url = appDelegate.persistentContainer.persistentStoreCoordinator.persistentStores.first?.url {
-            print(url)
-        }
     }
 }
 

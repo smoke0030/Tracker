@@ -20,8 +20,8 @@ class CategoryViewModel{
     func getCategories() {
        
         let cats = TrackerCategoryStore.shared.fetchCategories()
-        for cat in cats {
-            categories.append(cat.title)
+        for category in cats {
+            categories.append(category.title)
         }
     }
     
