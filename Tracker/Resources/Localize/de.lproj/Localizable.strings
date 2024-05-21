@@ -1,0 +1,50 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Сергей on 29.02.2024.
+  
+*/
+"firstOnboardingView" = "Verfolge nur das, was du willst";
+"secondOnboardingView" = "Auch wenn es keine Liter Wasser und Yoga sind";
+"onboardingButton" = "Das ist Technologie!";
+"trackerTitle" = "Tracker";
+"searchPlaceholder" = "Suche";
+"trackersEmptyViewlabel" = "Was werden wir verfolgen?";
+"notFoundEmptyViewLabel" = "Nichts gefunden";
+"tabBarTrackers" = "Tracker";
+"tabBarStatistic" = "Statistik";
+"selectViewTitle" = "Erstellung eines Trackers";
+"selectHabitTitle" = "Gewohnheit";
+"selectIrregularEventTitle" = "Unregelmäßiges Ereignis";
+"habitTitle" = "Neue Gewohnheit";
+"irregularEventTitle" = "Neues unregelmäßiges Ereignis";
+"habitTextFieldPlaceholder" = "Tracker-Namen eingeben";
+"tableCategoryTitle" = "Kategorie";
+"scheduleTitle" = "Zeitplan";
+"newCategoryTFPlaceholder" = "Geben Sie den Kategorienamen ein";
+"addCategoryButton" = "Kategorie hinzufügen";
+"newCategoryTitle" = "Neue Kategorie";
+"done" = "Fertig";
+"emojiHeader" = "Emoji";
+"colorHeader" = "Farbe";
+"habitCreateButton" = "Erstellen";
+"habitCancelButton" = "Abbrechen";
+"categotyTitle" = "Kategorien";
+"categoriesEmptyLabel" = "Gewohnheiten und Ereignisse können \nnach Bedeutung kombiniert werden";
+"categoryCreateButton" = "Kategorie hinzufügen";
+"monday" = "Montag";
+"tuesday" = "Dienstag";
+"wednesday" = "Mittwoch";
+"thursday" = "Donnerstag";
+"friday" = "Freitag";
+"saturday" = "Samstag";
+"sunday" = "Sonntag";
+"shortMonday" = "Mo";
+"shortTuesday" = "Di";
+"shortThursday" = "Do";
+"shortFriday" = "Fr";
+"shortSaturday" = "Sa";
+"shortWednesday" = "Mi";
+"shortSunday" = "So";
+

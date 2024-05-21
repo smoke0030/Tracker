@@ -1,0 +1,65 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Сергей on 29.02.2024.
+  
+*/
+
+"firstOnboardingView" = "Отслеживайте только то, что хотите";
+"secondOnboardingView" = "Даже если это не литры воды и йога";
+"onboardingButton" = "Вот это технологии!";
+"trackerTitle" = "Трекеры";
+"searchPlaceholder" = "Поиск";
+"trackersEmptyViewlabel" = "Что будем отслеживать?";
+"notFoundEmptyViewLabel" = "Ничего не найдено";
+"tabBarTrackers" = "Трекеры";
+"tabBarStatistic" = "Статистика";
+"selectViewTitle" = "Создание трекера";
+"selectHabitTitle" = "Привычка";
+"selectIrregularEventTitle" = "Нерегулярное событие";
+"habitTitle" = "Новая привычка";
+"irregularEventTitle" = "Новое нерегулярное событие";
+"habitTextFieldPlaceholder" = "Введите название трекера";
+"tableCategoryTitle" = "Категория";
+"scheduleTitle" = "Расписание";
+"newCategoryTFPlaceholder" = "Введите название категории";
+"addCategoryButton" = "Добавить категорию";
+"newCategoryTitle" = "Новая категория";
+"done" = "Готово";
+"emojiHeader" = "Эмодзи";
+"colorHeader" = "Цвет";
+"habitCreateButton" = "Создать";
+"habitCancelButton" = "Отменить";
+"categotyTitle" = "Категории";
+"categoriesEmptyLabel" = "Привычки и события можно \nобъединить по смыслу";
+"categoryCreateButton" = "Добавить категорию";
+"monday" = "Понедельник";
+"tuesday" = "Вторник";
+"wednesday" = "Среда";
+"thursday" = "Четверг";
+"friday" = "Пятница";
+"saturday" = "Суббота";
+"sunday" = "Воскресенье";
+"shortMonday" = "Пн";
+"shortTuesday" = "Вт";
+"shortThursday" = "Чт";
+"shortFriday" = "Пт";
+"shortSaturday" = "Сб";
+"shortWednesday" = "Ср";
+"shortSunday" = "Вс";
+"everyday" = "Ежедневно";
+"Filters" = "Фильтры";
+"All trackers" = "Все трекеры";
+"Trackers for today" =  "Трекеры на сегодня";
+"CompletedTrackers" = "Завершенные";
+"Not completed trackers" = "Не завершенные";
+"statistic" = "Статистика";
+"empty statistic" = "Анализировать пока нечего";
+"Edit Title" = "Редактирование";
+"Pin" = "Закрепить";
+"Unpin" = "Открепить";
+"Delete" = "Удалить";
+"tracker alert text" = "Уверены что хотите удалить трекер?";
+"Save" = "Сохранить";
+"Pinned" = "Закрепленные";

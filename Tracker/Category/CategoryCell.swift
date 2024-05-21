@@ -12,7 +12,7 @@ final class CategoryCell: UITableViewCell {
     private let cellView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9098039216, blue: 0.9215686275, alpha: 0.7017367534)
+        view.backgroundColor = Colors.shared.dark
         return view
     }()
     
@@ -62,7 +62,7 @@ final class CategoryCell: UITableViewCell {
             cell.layer.cornerRadius = 16
             contentView.backgroundColor = .clear
             titleLabel.layer.cornerRadius = 0
-            titleLabel.textColor = .black
+        titleLabel.textColor = UIColor.label
             titleLabel.text = object
             doneImageView.isHidden = true
 

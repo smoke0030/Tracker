@@ -24,6 +24,7 @@ extension TrackerCoreData {
     @NSManaged public var completedDays: Int16
     @NSManaged public var emoji: String?
     @NSManaged public var id: UUID?
+    @NSManaged public var isPinned: Bool
     @NSManaged public var name: String?
     @NSManaged public var schedule: [String]?
     @NSManaged public var category: TrackerCategoryCoreData?
